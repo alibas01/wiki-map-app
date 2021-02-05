@@ -11,6 +11,7 @@ Requirements:
     - authenticated users can modify maps (add, edit, remove points)
     - users can favourite a map
     - users have profiles, indicating their favourite maps and maps they've contributed to
+  
   <br>
 
   ### Use [leaflet](http://leafletjs.com/) or [google map api](https://developers.google.com/maps/).
