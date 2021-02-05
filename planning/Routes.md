@@ -22,8 +22,8 @@ The end-user wants to login
 POST /login
 GET /login
 
-The authenticated end-user wants to view maps which he/she fovourited and contributed to
-GET /users/myprofile
+<!-- The authenticated end-user wants to view maps which he/she fovourited and contributed to
+GET /users/myprofile -->
 
 The end-user wants to see a list of user profiles
 GET /users
