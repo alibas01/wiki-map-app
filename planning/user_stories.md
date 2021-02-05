@@ -5,3 +5,6 @@ As I user I want to make my maps confidental.
 As I user I want to categorize my maps.
 
 I want to create a mp of indian restaurants. This map shold be edited by the new resturants I visit and like. And if I don't like tat place anymore I should be able delete it. I want to share maps with my friends. Or I may want to keep it secret. I might want to use the current location or mark it on the map. 
+
+ERD
+mockup
