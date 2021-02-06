@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>map test</title>
+  <style>
+    #map{
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>My Google Map</h1>
+  <div id="map"></div>
+  <h4 id="position"></h4>
+  <script>
+    function initMap(){
+      const myLatlng = { lat: -25.363, lng: 131.044 };
+      const options ={
+        zoom:8,
+        center: myLatlng
+      };
+      const map = new google.maps.Map(document.getElementById("map"), options);
+      const icon = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
+        // Create the initial InfoWindow.
+      let infoWindow = new google.maps.InfoWindow({
+        content: "Click the map to get Lat/Lng!",
+        position: myLatlng,
+      });
+      infoWindow.open(map);
+      // Configure the click listener.
+      map.addListener("click", (mapsMouseEvent) => {
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Create a new InfoWindow.
+        infoWindow = new google.maps.InfoWindow({
+          position: mapsMouseEvent.latLng,
+        });
+        console.log(mapsMouseEvent.latLng.toJSON());
+        document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+        infoWindow.setContent(
+          JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
+        );
+        infoWindow.open(map);
+      });
+    }
+  </script>
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"
+  async
+  ></script>
+</body>
+</html>
