@@ -6,7 +6,7 @@
     const positionImport = {lat: Number(positionObj[0]), lng: Number(positionObj[1])};
 
     const markers = [
-        {coords:{lat:42.3601, lng:-71.0589}, title: 'restaurant'},
+        {coords: positionImport, title: titleViewed},
         {coords:{lat:42.8584, lng:-70.9300}, title: 'shopping mall'}
     ];
 
@@ -36,7 +36,7 @@
           map.setCenter(marker.getPosition());
           document.getElementById("title").innerHTML = obj.title;
           const currentPosition = obj.coords.lat + ' ' + obj.coords.lng
-          document.getElementById("position").innerHTML = currentPosition;
+          document.getElementById("position").value = currentPosition;
         });
       }
 
