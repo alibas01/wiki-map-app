@@ -27,7 +27,6 @@
             infoWindow.open(map);
             map.setCenter(pos);
             document.getElementById("position").innerHTML = JSON.stringify(pos);
-            console.log(pos);
           },
           () => {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -44,7 +43,6 @@
         infoWindow = new google.maps.InfoWindow({
           position: mapsMouseEvent.latLng,
         });
-        console.log(mapsMouseEvent.latLng.toJSON());
         document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
         infoWindow.setContent("Select this location!");
         map.setZoom(12);
