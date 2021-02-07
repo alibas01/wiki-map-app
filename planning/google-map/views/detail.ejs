@@ -3,47 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>map test</title>
+  <title>map details</title>
   <style>
     #map{
       height: 400px;
       width: 100%;
     }
-    #current-position{
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      width: 500px;
-    }
-    p{
-      margin: 8px;
-    }
-    select {
-      margin: 8px;
-    }
-    textarea {
-      margin: 8px;
-    }
-    button {
-      margin: 8px;
-    }
-    h4 {
-      margin: 8px;
-    }
   </style>
 </head>
 <body>
-  <%- include('particles/_map') %>
-  <h1>Map details</h1>
-  <div id="map"></div>
   <div id="current-position">
     <h4>Details</h4>
-    <p id="position" name="position"></p>
+    <h5>Title:</h5>
+    <p id="title" name="title"><%= title %></p>
+    <h5>Position:</h5>
+    <p id="position" name="position"><%= position.lat %> <%= position.lng %></p>
   </div>
-  <script
-  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"
-  async
-  ></script>
+  <%- include('particles/_map') %>
+  <div id="map"></div>
 </body>
 </html>

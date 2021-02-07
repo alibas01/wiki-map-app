@@ -17,5 +17,9 @@ app.get('/new-map', (req, res) => {
 });
 
 app.get('/detail', (req, res) => {
-  res.render('detail');
+  const templateVars = {
+    position: {lat:42.3601, lng:-71.0589},
+    title: 'restaurant'
+  }
+  res.render('detail', templateVars);
 });
