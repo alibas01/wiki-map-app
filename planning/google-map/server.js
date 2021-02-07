@@ -5,7 +5,10 @@ const port = 8080;
 app.set('view engine', 'ejs');
 
 app.get('/', (req, res) => {
-  res.render('new');
+  const templateVars = {
+    greeting: 'welcome',
+  }
+  res.render('home', templateVars);
 });
 
 app.listen(port, () => {
