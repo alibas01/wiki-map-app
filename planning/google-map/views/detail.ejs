@@ -12,6 +12,7 @@
   </style>
 </head>
 <body>
+  <%- include('partials/_header') %>
   <div id="current-position">
     <h4>Details</h4>
     <h5>Title:</h5>
@@ -19,10 +20,10 @@
     <h5>Position:</h5>
     <p id="position" name="position"><%= position.lat %> <%= position.lng %></p>
   </div>
-  <%- include('particles/_map') %>
+  <%- include('partials/_map') %>
   <div id="map"></div>
   <form method="GET" action="/">
-    <td><button type="submit" class="btn btn-outline-primary">Home</button></td>
+    <button type="submit" class="btn btn-outline-primary">Home</button>
   </form>
 </body>
 </html>

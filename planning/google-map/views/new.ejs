@@ -34,7 +34,8 @@
   </style>
 </head>
 <body>
-  <%- include('particles/_click') %>
+  <%- include('partials/_header') %>
+  <%- include('partials/_click') %>
   <h1>Create your own map</h1>
   <div id="map"></div>
   <form class="form-inline">
@@ -56,7 +57,7 @@
     </div>
   </form>
   <form method="GET" action="/">
-    <td><button type="submit" class="btn btn-outline-primary">Home</button></td>
+    <button type="submit" class="btn btn-outline-primary">Home</button>
   </form>
   <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"
