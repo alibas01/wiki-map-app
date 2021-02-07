@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>map test</title>
+  <style>
+    #map{
+      height: 400px;
+      width: 100%;
+    }
+    #current-position{
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      width: 500px;
+    }
+    p{
+      margin: 8px;
+    }
+    select {
+      margin: 8px;
+    }
+    textarea {
+      margin: 8px;
+    }
+    button {
+      margin: 8px;
+    }
+    h4 {
+      margin: 8px;
+    }
+  </style>
+</head>
+<body>
+  <%- include('particles/_click') %>
+  <h1>Create your own map</h1>
+  <div id="map"></div>
+  <form class="form-inline">
+    <div id="current-position">
+      <h4>Map details:</h4>
+      <h4>position selected:</h4>
+      <p id="position" name="position">click the map</p>
+      <h4>category</h4>
+      <select name="category" id="category">
+        <option value="drinking">drinking</option>
+        <option value="restaurants">restaurants</option>
+        <option value="art galleries">art galleries</option>
+        <option value="historic places">historic places</option>
+        <option value="parks">parks</option>
+        <option value="shopping malls">shopping malls</option>
+      </select>
+      <textarea type="text" placeholder="description"></textarea>
+      <button type="submit">submit</button>
+    </div>
+  </form>
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"
+  async
+  ></script>
+</body>
+</html>

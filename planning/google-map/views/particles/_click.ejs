@@ -1,9 +1,9 @@
 <div>
   <script>
     function initMap(){
-      const myLatlng = { lat: -25.363, lng: 131.044 };
+      const myLatlng = { lat: 43.6532, lng: -79.3832 };
       const options ={
-        zoom:8,
+        zoom: 10,
         center: myLatlng
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
@@ -14,6 +14,27 @@
         content: "Click the map to get Lat/Lng!",
         position: myLatlng,
       });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            infoWindow.setPosition(pos);
+            infoWindow.setContent("Current Location");
+            infoWindow.open(map);
+            map.setCenter(pos);
+            document.getElementById("position").innerHTML = JSON.stringify(pos);
+            console.log(pos);
+          },
+          () => {
+            handleLocationError(true, infoWindow, map.getCenter());
+          }
+        );
+      }
+
       infoWindow.open(map);
       // Configure the click listener.
       map.addListener("click", (mapsMouseEvent) => {
@@ -25,9 +46,8 @@
         });
         console.log(mapsMouseEvent.latLng.toJSON());
         document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-        infoWindow.setContent(
-          JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2)
-        );
+        infoWindow.setContent("Select this location!");
+        map.setZoom(12);
         infoWindow.open(map);
       });
     }

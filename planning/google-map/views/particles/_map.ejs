@@ -22,13 +22,13 @@
         });
         marker.addListener('click', function(){
           infoWindow.open(map, marker);
-          map.setZoom(12);
+          map.setZoom(10);
           map.setCenter(marker.getPosition());
         });
       }
       const markers = [
-        {coords:{lat:42.3601, lng:-71.0589}, describe: 'somewhere', image: icon},
-        {coords:{lat:42.8584, lng:-70.9300}, describe: 'another place', image: icon}
+        {coords:{lat:42.3601, lng:-71.0589}, describe: 'title', image: icon},
+        {coords:{lat:42.8584, lng:-70.9300}, describe: 'title', image: icon}
       ];
 
       for (const marker of markers) {
