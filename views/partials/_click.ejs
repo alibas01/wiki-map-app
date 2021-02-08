@@ -1,0 +1,57 @@
+<div>
+  <script>
+    function initMap(){
+      const myLatlng = { lat: 43.6532, lng: -79.3832 };
+      const options ={
+        zoom: 10,
+        center: myLatlng
+      };
+      const map = new google.maps.Map(document.getElementById("map"), options);
+      const icon = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+
+        // Create the initial InfoWindow.
+      let infoWindow = new google.maps.InfoWindow({
+        content: "Click the map to get Lat/Lng!",
+        position: myLatlng,
+      });
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+            infoWindow.setPosition(pos);
+            infoWindow.setContent("Current Location");
+            infoWindow.open(map);
+            map.setCenter(pos);
+            document.getElementById("position").innerHTML = JSON.stringify(pos);
+          },
+          () => {
+            handleLocationError(true, infoWindow, map.getCenter());
+          }
+        );
+      }
+
+      infoWindow.open(map);
+      // Configure the click listener.
+      map.addListener("click", (mapsMouseEvent) => {
+        // Close the current InfoWindow.
+        infoWindow.close();
+        // Create a new InfoWindow.
+        infoWindow = new google.maps.InfoWindow({
+          position: mapsMouseEvent.latLng,
+        });
+        document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+        infoWindow.setContent("Select this location!");
+        map.setZoom(12);
+        infoWindow.open(map);
+      });
+    }
+  </script>
+  <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"
+  async
+  ></script>
+</div>
