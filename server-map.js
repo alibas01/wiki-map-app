@@ -87,11 +87,11 @@ app.get('/detail/:id', (req, res) => {
           long: map['long'],
           title: map['name'],
           description: map['description'],
-        }
+        };
       }
     }
     console.log(templateVars);
     res.render('detail', templateVars);
-  })
+  });
 
 });

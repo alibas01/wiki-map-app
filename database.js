@@ -4,7 +4,7 @@ const pool = new Pool({
   user: 'vagrant',
   password: '123',
   host: 'localhost',
-  database: 'wikimap'
+  database: 'template1'
 });
 
 const getAllLocations = function() {
