@@ -20,6 +20,7 @@ const db = {
 app.get('/', (req, res) => {
   const templateVars = {
     greeting: 'welcome',
+    db: db,
   }
   res.render('home', templateVars);
 });
