@@ -23,25 +23,21 @@ const db = {
 };
 
 app.get('/', (req, res) => {
+
+  res.render('index');
+});
+
+
+
+app.get('/points', (req, res) => {
   locations.then(result => {
     const locations_db = result;
     const templateVars = {
       greeting: 'welcome',
       locations: locations_db,
     };
-    res.render('index', templateVars);
+    res.render('points', templateVars);
   });
-});
-
-
-
-app.get('/points', (req, res) => {
-  const templateVars = {
-    greeting: 'welcome',
-    db: database,
-  };
-  console.log(templateVars.db);
-  res.render('points', templateVars);
 });
 
 app.get('/profile', (req, res) => {
