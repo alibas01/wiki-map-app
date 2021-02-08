@@ -22,7 +22,15 @@ app.get('/', (req, res) => {
     greeting: 'welcome',
     db: db,
   };
-  res.render('home', templateVars);
+  res.render('index', templateVars);
+});
+
+app.get('/points', (req, res) => {
+  const templateVars = {
+    greeting: 'welcome',
+    db: db,
+  };
+  res.render('points', templateVars);
 });
 
 app.listen(port, () => {
