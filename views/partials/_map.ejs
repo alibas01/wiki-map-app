@@ -2,6 +2,8 @@
   <script>
     const titleViewed = document.getElementById("title").innerHTML;
     const positionViewed = document.getElementById("position").innerHTML;
+    console.log(positionViewed);
+
     const positionObj = positionViewed.split(" ");
     const positionImport = {lat: Number(positionObj[0]), lng: Number(positionObj[1])};
     console.log(titleViewed, positionImport);

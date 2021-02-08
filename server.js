@@ -55,11 +55,13 @@ app.get("/", (req, res) => {
 const port = 8080;
 const database = require('./database');
 const locations = database.getAllLocations();
+console.log(locations);
 
 app.use('/public', express.static('public'));
 
 app.get('/points', (req, res) => {
   locations.then(result => {
+    console.log(result);
     const locations_db = result;
     const templateVars = {
       locations: locations_db,
