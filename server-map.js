@@ -23,7 +23,6 @@ const db = {
 };
 
 app.get('/', (req, res) => {
-
   res.render('index');
 });
 
