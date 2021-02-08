@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <title>map details</title>
+  <style>
+    #map{
+      height: 400px;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <%- include('partials/_header') %>
+  <h2>Map details</h2>
+  <div id="map"></div>
+  <div id="current-position">
+    <h4>Details</h4>
+    <h5>Title:</h5>
+    <p id="title" name="title"><%= title %></p>
+    <h5>Position:</h5>
+    <p id="position" name="position"><%= position.lat %> <%= position.lng %></p>
+    <h5>Category:</h5>
+    <p id="category" name="category"><%= category %></p>
+    <h5>Description:</h5>
+    <p id="description" name="description"><%= description %></p>
+  </div>
+  <%- include('partials/_map') %>
+  <form method="GET" action="/">
+    <button type="submit" class="btn btn-outline-primary">Home</button>
+  </form>
+</body>
+</html>
