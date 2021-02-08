@@ -37,6 +37,13 @@ body {
 
   .title {
     @include title-center;
+    h1 {
+      background-color: $color5;
+      color: $color3;
+      padding: 1em;
+      border-radius: 25px;
+      box-shadow: 2px 2px 5px $color3;
+    }
   }
 
   .center {
