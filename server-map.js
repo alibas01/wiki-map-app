@@ -12,7 +12,6 @@ app.get('/', (req, res) => {
   locations.then(result => {
     const locations_db = result;
     const templateVars = {
-      greeting: 'welcome',
       locations: locations_db,
     };
     res.render('home', templateVars);
@@ -44,7 +43,6 @@ app.get('/detail/:id', (req, res) => {
     const locations = result;
     let templateVars;
     for (const map of locations) {
-      console.log(map['id'], req.params.id);
       if (map['id'] === Number(req.params.id)) {
         templateVars = {
           lat: map['lat'],
@@ -54,7 +52,6 @@ app.get('/detail/:id', (req, res) => {
         }
       }
     }
-    console.log(templateVars);
     res.render('detail', templateVars);
   })
 

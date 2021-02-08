@@ -8,7 +8,7 @@ const pool = new Pool({
 });
 
 const getAllLocations = function() {
-  return pool.query(`SELECT id, name, lat, long, description FROM locations;`).then(res => {
+  return pool.query(`SELECT id, name, lat, long, description FROM locations LIMIT 5;`).then(res => {
     return res.rows;
   });
 }
