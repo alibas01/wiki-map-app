@@ -59,7 +59,7 @@ app.listen(PORT, () => {
   console.log('Server running!');
 });
 
-//BELOW HERE
+//BELOW HERE SERVER-MAP
 
 const data = {
   "userRandomID" : {id: "userRandomID", coords: {lat:42.3601, lng:-71.0589},
