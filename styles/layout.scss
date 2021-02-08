@@ -35,6 +35,33 @@ body {
     margin: 8px;
   }
 
+  .title {
+    @include title-center;
+  }
+
+  .center {
+    @include center;
+  }
+
+  .form-layout {
+    height: 75vh;
+    // display: flex;
+    // flex-direction: column;
+    h1 {
+      margin-right: 2em;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid black;
+      padding-left: 2em;
+
+      input {
+        margin-bottom: 1em;
+      }
+    }
+  }
 }
 
 header {

@@ -36,12 +36,20 @@ app.get('/points', (req, res) => {
   res.render('points', templateVars);
 });
 
-app.get('/profile/', (req, res) => {
+app.get('/profile', (req, res) => {
   const templateVars = {
     greeting: 'welcome',
     db: db,
   };
   res.render('profile', templateVars);
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
 });
 
 app.listen(port, () => {

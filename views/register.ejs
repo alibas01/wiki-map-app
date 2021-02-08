@@ -8,6 +8,17 @@
 
   <body>
     <%- include('partials/_nav') %>
-    <h1>Register</h1>
+    <div class='center form-layout'>
+      <h1>Register</h1>
+      <form action="/register" method="POST">
+        <label for="user">User Name:</label>
+        <input type="text" name="user" placeholder="Username">
+
+        <label for="pass">Password:</label>
+        <input type="password" name="pass" placeholder="Password">
+
+        <button type="submit">Submit</button>
+      </form>
+    </div>
   </body>
 </html>

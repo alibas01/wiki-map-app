@@ -8,10 +8,16 @@
 
   <body>
     <%- include('partials/_nav') %>
-    <div class='center'>
+    <div class='center form-layout'>
       <h1>Login</h1>
       <form action="/login" method="POST">
+        <label for="user">User Name:</label>
+        <input type="text" name="user" placeholder="Username">
 
+        <label for="pass">Password:</label>
+        <input type="password" name="pass" placeholder="Password">
+
+        <button type="submit">Submit</button>
       </form>
     </div>
   </body>
