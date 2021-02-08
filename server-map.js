@@ -36,6 +36,14 @@ app.get('/points', (req, res) => {
   res.render('points', templateVars);
 });
 
+app.get('/profile/', (req, res) => {
+  const templateVars = {
+    greeting: 'welcome',
+    db: db,
+  };
+  res.render('profile', templateVars);
+});
+
 app.listen(port, () => {
   console.log('Server running!');
 });
