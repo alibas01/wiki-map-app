@@ -19,23 +19,21 @@
         <th scope="col">Position(lat)</th>
         <th scope="col">Position(lng)</th>
         <th scope="col">Description</th>
-        <th scope="col">Category</th>
         <th scope="col">Detail</th>
       </tr>
     </thead>
-    <% for(let map in db) { %>
+    <% for(const map of locations) { %>
       <tr>
-        <td><%= db[map]['id'] %></td>
-        <td><%= db[map]['title'] %></td>
-        <td><%= db[map]['coords']['lat'] %></td>
-        <td><%= db[map]['coords']['lng'] %></td>
-        <td><%= db[map]['description'] %></td>
-        <td><%= db[map]['category'] %></td>
-        <form method="GET" action="/detail/<%= db[map]['id'] %>">
+        <td><%= map['id'] %></td>
+        <td><%= map['name'] %></td>
+        <td><%= map['lat'] %></td>
+        <td><%= map['long'] %></td>
+        <td><%= map['description'] %></td>
+        <form method="GET" action="/detail/<%= map['id'] %>">
           <td><button type="submit" class="btn btn-outline-primary">Details</button></td>
         </form>
       </tr>
-      <% } %>
+    <% } %>
   </table>
 
 
