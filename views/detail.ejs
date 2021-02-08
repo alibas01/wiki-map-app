@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <%- include('partials/_includes') %>
   <title>map details</title>
-  <style>
-    #map{
-      height: 400px;
-      width: 100%;
-    }
-  </style>
 </head>
 <body>
-  <%- include('partials/_header') %>
+  <%- include('partials/_nav') %>
   <h2>Map details</h2>
+
+  <!-- MAP HERE -->
   <div id="map"></div>
+
+  <!-- DETAILS -->
   <div id="current-position">
     <h4>Details</h4>
     <h5>Title:</h5>
@@ -25,9 +21,9 @@
     <h5>Description:</h5>
     <p id="description" name="description"><%= description %></p>
   </div>
-  <%- include('partials/_map') %>
   <form method="GET" action="/">
     <button type="submit" class="btn btn-outline-primary">Home</button>
   </form>
+  <%- include('partials/_map') %>
 </body>
 </html>

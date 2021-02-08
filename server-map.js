@@ -8,51 +8,19 @@ const locations = database.getAllLocations();
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use('/public', express.static('public'));
+
+const db = {
+  "userRandomID" : {id: "userRandomID", coords: {lat:42.3601, lng:-71.0589},
+    title: 'restaurant', category: 'restaurant', description: 'restaurant'},
+  "userRandomID2": {id: "userRandomID2", coords:{lat:42.8584, lng:-70.9300},
+    title: 'shopping mall', category: 'shopping mall', description: 'shopping mall'}
+};
+
 app.get('/', (req, res) => {
-  locations.then(result => {
-    const locations_db = result;
-    const templateVars = {
-      locations: locations_db,
-    };
-    res.render('home', templateVars);
-  });
+  res.render('index');
 });
 
-app.listen(port, () => {
-  console.log('Server running!')
-});
 
-app.get('/new-map', (req, res) => {
-  res.render('new');
-});
 
-app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
-  const newMap = {
-    id: db.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${key}`);
-});
 
-app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    let templateVars;
-    for (const map of locations) {
-      if (map['id'] === Number(req.params.id)) {
-        templateVars = {
-          lat: map['lat'],
-          long: map['long'],
-          title: map['name'],
-          description: map['description'],
-        }
-      }
-    }
-    res.render('detail', templateVars);
-  })
-
-});

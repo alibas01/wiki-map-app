@@ -4,7 +4,7 @@
     const positionViewed = document.getElementById("position").innerHTML;
     const positionObj = positionViewed.split(" ");
     const positionImport = {lat: Number(positionObj[0]), lng: Number(positionObj[1])};
-
+    console.log(titleViewed, positionImport);
     const markers = [
         {coords: positionImport, title: titleViewed},
         {coords:{lat:42.8584, lng:-70.9300}, title: 'shopping mall'}

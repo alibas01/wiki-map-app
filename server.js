@@ -14,8 +14,10 @@ const morgan     = require('morgan');
 const { Pool } = require('pg');
 const dbParams = require('./lib/db.js');
 const db = new Pool(dbParams);
-db.connect();
-
+db.connect().then(console.log('connect to db!'));
+db.query(`SELECT title FROM maps LIMIT 5;`).then(
+  res => console.log(res.rows)
+)
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -50,6 +52,73 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+const port = 8080;
+const database = require('./database');
+const locations = database.getAllLocations();
+
+app.use('/public', express.static('public'));
+
+app.get('/points', (req, res) => {
+  locations.then(result => {
+    const locations_db = result;
+    const templateVars = {
+      locations: locations_db,
+    };
+    res.render('points', templateVars);
+  });
+});
+
+app.get('/profile', (req, res) => {
+  //get current user profile
+  res.render('profile');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+app.get('/logout', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.listen(port, () => {
+  console.log('Server running!');
+});
+
+app.get('/new-map', (req, res) => {
+  res.render('new');
+});
+
+app.post('/new-map', (req, res) => {
+  const currentPosition = JSON.parse(req.body.position)
+  const newMap = {
+    id: db.length,
+    lat: currentPosition['lat'],
+    long: currentPosition['lng'],
+    name: req.body.title,
+    description: req.body.description
+  };
+  res.redirect(`/detail/${key}`);
+});
+
+//see specific details
+app.get('/detail/:id', (req, res) => {
+  locations.then(result => {
+    const locations = result;
+    let templateVars;
+    for (const map of locations) {
+      if (map['id'] === Number(req.params.id)) {
+        templateVars = {
+          lat: map['lat'],
+          long: map['long'],
+          title: map['name'],
+          description: map['description'],
+        };
+      }
+    }
+    res.render('detail', templateVars);
+  });
 });
