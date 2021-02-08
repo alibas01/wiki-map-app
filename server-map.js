@@ -6,6 +6,9 @@ const bodyParser = require('body-parser');
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use('/public', express.static('public'));
+
+
 function generateRandomString() {
   return  Math.random().toString(36).substring(2,8);
 }
@@ -54,6 +57,7 @@ app.post('/new-map', (req, res) => {
   res.redirect(`/detail/${key}`);
 });
 
+//see specific details
 app.get('/detail/:id', (req, res) => {
   const map = db[req.params.id];
   const templateVars = {

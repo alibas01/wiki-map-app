@@ -1,10 +1,38 @@
 @import "./partials/palette";
+@import "./partials/mixins";
 
 body {
   background-color: #EEE;
 
   h1 {
     color: $color1;
+  }
+
+  #map{
+    height: 400px;
+    width: 100%;
+  }
+  #current-position{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 500px;
+  }
+  p{
+    margin: 8px;
+  }
+  select {
+    margin: 8px;
+  }
+  textarea {
+    margin: 8px;
+  }
+  button {
+    margin: 8px;
+  }
+  h4 {
+    margin: 8px;
   }
 
 }
