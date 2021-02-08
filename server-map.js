@@ -33,21 +33,22 @@ app.get('/', (req, res) => {
 app.get('/points', (req, res) => {
   const templateVars = {
     greeting: 'welcome',
-    db: db,
+    db: database,
   };
+  console.log(templateVars.db);
   res.render('points', templateVars);
 });
 
 app.get('/profile', (req, res) => {
-  const templateVars = {
-    greeting: 'welcome',
-    db: db,
-  };
-  res.render('profile', templateVars);
+  //get current user profile
+  res.render('profile');
 });
 
 app.get('/login', (req, res) => {
   res.render('login');
+});
+app.get('/logout', (req, res) => {
+  res.redirect('/');
 });
 
 app.get('/register', (req, res) => {
