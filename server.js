@@ -10,6 +10,10 @@ const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
 
+//temp data
+const database = require('./database');
+const locations = database.getAllLocations();
+
 // PG database client/connection setup
 const { Pool } = require('pg');
 const dbParams = require('./lib/db.js');
@@ -50,26 +54,19 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-
-const port = 8080;
-
-const database = require('./database');
-const locations = database.getAllLocations();
-
-app.set('view engine', 'ejs');
-app.use(bodyParser.urlencoded({extended: true}));
-
-app.use('/public', express.static('public'));
-
-
-
-
-
-
-app.get('/', (req, res) => {
-  res.render('index');
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}`);
+  console.log('Server running!');
 });
 
+//BELOW HERE SERVER-MAP
+
+const data = {
+  "userRandomID" : {id: "userRandomID", coords: {lat:42.3601, lng:-71.0589},
+    title: 'restaurant', category: 'restaurant', description: 'restaurant'},
+  "userRandomID2": {id: "userRandomID2", coords:{lat:42.8584, lng:-70.9300},
+    title: 'shopping mall', category: 'shopping mall', description: 'shopping mall'}
+};
 
 
 app.get('/points', (req, res) => {
@@ -86,6 +83,55 @@ app.get('/points', (req, res) => {
 app.get('/profile', (req, res) => {
   //get current user profile
   res.render('profile');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+app.get('/logout', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.get('/new-map', (req, res) => {
+  res.render('new');
+});
+
+app.post('/new-map', (req, res) => {
+  const currentPosition = JSON.parse(req.body.position)
+  const newMap = {
+    id: data.length,
+    lat: currentPosition['lat'],
+    long: currentPosition['lng'],
+    name: req.body.title,
+    description: req.body.description
+  };
+  res.redirect(`/detail/${key}`);
+});
+
+//see specific details
+app.get('/detail/:id', (req, res) => {
+  locations.then(result => {
+    const locations = result;
+    let templateVars;
+    for (const map of locations) {
+      console.log(map['id'], req.params.id);
+      if (map['id'] === Number(req.params.id)) {
+        templateVars = {
+          lat: map['lat'],
+          long: map['long'],
+          title: map['name'],
+          description: map['description'],
+        };
+      }
+    }
+    console.log(templateVars);
+    res.render('detail', templateVars);
+  });
+
 });
 
 app.get('/login', (req, res) => {
