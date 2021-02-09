@@ -53,7 +53,14 @@ app.use("/api/widgets", widgetsRoutes(db));
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
 app.get("/", (req, res) => {
-  res.render("index");
+  locations.then(result => {
+    const locations = result;
+    const templateVars = {
+      locations,
+    };
+    console.log(templateVars);
+    res.render('index', templateVars);
+  });
 });
 
 app.use('/public', express.static('public'));
@@ -132,10 +139,8 @@ app.get('/detail/:id', (req, res) => {
         };
       }
     }
-    console.log(templateVars);
     res.render('detail', templateVars);
   });
-
 });
 
 app.get('/new-map', (req, res) => {
@@ -172,4 +177,3 @@ app.get('/detail/:id', (req, res) => {
     res.render('detail', templateVars);
   });
 });
-
