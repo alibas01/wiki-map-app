@@ -3,12 +3,16 @@ require('dotenv').config();
 
 // Web server config
 const PORT       = process.env.PORT || 8080;
+const salt       = 10;
 const ENV        = process.env.ENV || "development";
 const express    = require("express");
 const bodyParser = require("body-parser");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
+const methodOverride = require('method-override')
+const cookieSession = require('cookie-session');
+const bcrypt = require('bcrypt');
 // Helper functions
 const db_helpers = require('./lib/db_helpers');
 const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
@@ -46,6 +50,12 @@ app.use("/styles", sass({
   outputStyle: 'expanded'
 }));
 app.use(express.static("public"));
+app.use(methodOverride('_method'));
+app.use(morgan('tiny'));
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
