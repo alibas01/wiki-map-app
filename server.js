@@ -24,10 +24,6 @@ const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
 
-//temp data
-const database = require('./database');
-const locations = database.getAllLocations();
-
 // PG database client/connection setup
 const { Pool } = require('pg');
 const dbParams = require('./lib/db.js');
@@ -73,7 +69,7 @@ app.use("/api/widgets", widgetsRoutes(db));
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
 app.get("/", (req, res) => {
-  locations.then(result => {
+  getAllLocations().then(result => {
     const locations = result;
     const templateVars = {
       locations,
@@ -101,7 +97,7 @@ const data = {
 
 
 app.get('/points', (req, res) => {
-  locations.then(result => {
+  getAllLocations().then(result => {
     const locations_db = result;
     const templateVars = {
       greeting: 'welcome',
@@ -161,7 +157,7 @@ app.post('/new-map', (req, res) => {
 
 //see specific details (updated temp to send locations to google-map)
 app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
+  getAllLocations().then(result => {
     const locations = result;
     const templateVars = {
           locations,
