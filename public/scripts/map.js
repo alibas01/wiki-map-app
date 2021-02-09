@@ -1,12 +1,12 @@
 $(document).ready(() => {
   console.log('hi');
 
-  const titleViewed = $("title")[0].innerHTML;
-  // const titleViewed = document.getElementById("title").innerHTML;
+  // const titleViewed = $("title")[0].innerHTML;
+  const titleViewed = document.getElementById("title").innerHTML;
   console.log(titleViewed);
   // const positionViewed = $("position");
   const positionViewed = document.getElementById("position").innerHTML;
-  console.log(positionViewed);
+  console.log('positionViewed',positionViewed);
 
 
   const positionObj = positionViewed.split(" ");
