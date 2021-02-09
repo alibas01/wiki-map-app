@@ -9,6 +9,16 @@ const bodyParser = require("body-parser");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
+// Helper functions
+const db_helpers = require('./lib/db_helpers');
+const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
+const getMapsbyId = db_helpers.getMapsbyId;
+const getUsers = db_helpers.getUsers;
+const newUser = db_helpers.newUser;
+const newPoint = db_helpers.newPoint;
+const newMap = db_helpers.newMap;
+const newLike = db_helpers.newLike;
+const getAllLocations = db_helpers.getAllLocations;
 
 //temp data
 const database = require('./database');
