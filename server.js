@@ -20,10 +20,6 @@ const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
 
-//temp data
-const database = require('./database');
-const locations = database.getAllLocations();
-
 // PG database client/connection setup
 const { Pool } = require('pg');
 const dbParams = require('./lib/db.js');
@@ -62,15 +58,17 @@ app.use("/api/widgets", widgetsRoutes(db));
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
+
 app.get("/", (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    const templateVars = {
-      locations,
-    };
-    console.log(templateVars);
-    res.render('index', templateVars);
-  });
+  getAllLocations().then(
+    result => {
+      const locations = result;
+      const templateVars = {
+        locations,
+      };
+      console.log(templateVars);
+      res.render('index', templateVars);
+    });
 });
 
 app.use('/public', express.static('public'));
@@ -91,11 +89,11 @@ const data = {
 
 
 app.get('/points', (req, res) => {
-  locations.then(result => {
-    const locations_db = result;
+  getAllLocations().then(result => {
+    const locations = result;
     const templateVars = {
       greeting: 'welcome',
-      locations: locations_db,
+      locations,
     };
     res.render('points', templateVars);
   });
@@ -135,108 +133,15 @@ app.post('/new-map', (req, res) => {
 
 //see specific details
 app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
+  getAllLocations().then(result => {
     const locations = result;
-    let templateVars;
-    for (const map of locations) {
-      console.log(map['id'], req.params.id);
-      if (map['id'] === Number(req.params.id)) {
-        templateVars = {
-          lat: map['lat'],
-          long: map['long'],
-          title: map['name'],
-          description: map['description'],
-        };
-      }
-    }
-    res.render('detail', templateVars);
-  });
-});
-
-app.get('/new-map', (req, res) => {
-  res.render('new');
-});
-
-app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
-  const newMap = {
-    id: db.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${key}`);
-});
-
-//see specific details
-app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    let templateVars;
-    for (const map of locations) {
-      if (map['id'] === Number(req.params.id)) {
-        templateVars = {
-          lat: map['lat'],
-          long: map['long'],
-          title: map['name'],
-          description: map['description'],
-        };
-      }
-    }
-    res.render('detail', templateVars);
-  });
-});
-
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-app.get('/logout', (req, res) => {
-  res.redirect('/');
-});
-
-app.get('/register', (req, res) => {
-  res.render('register');
-});
-
-
-
-app.get('/new-map', (req, res) => {
-  res.render('new');
-});
-
-app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
-  const newMap = {
-    id: db.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${key}`);
-});
-
-//see specific details
-app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    let templateVars;
-    for (const map of locations) {
-      console.log(map['id'], req.params.id);
-      if (map['id'] === Number(req.params.id)) {
-        templateVars = {
-          lat: map['lat'],
-          long: map['long'],
-          title: map['name'],
-          description: map['description'],
-        };
-      }
+    const templateVars = {
+      locations,
+      id_current: Number(req.params.id),
     }
     console.log(templateVars);
     res.render('detail', templateVars);
   });
-
 });
 
 
