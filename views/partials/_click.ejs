@@ -46,6 +46,7 @@
         document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
         infoWindow.setContent("Select this location!");
         map.setZoom(12);
+        map.setCenter({lat: infoWindow.position.lat(), lng: infoWindow.position.lng()});
         infoWindow.open(map);
       });
     }

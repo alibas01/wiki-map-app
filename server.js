@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // load .env data into process.env
 require('dotenv').config();
 
@@ -31,7 +32,7 @@ const db = new Pool(dbParams);
 db.connect().then(console.log('connect to db!'));
 db.query(`SELECT title FROM maps LIMIT 5;`).then(
   res => console.log(res.rows)
-)
+);
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -122,7 +123,7 @@ app.get('/new-map', (req, res) => {
 });
 
 app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
+  const currentPosition = JSON.parse(req.body.position);
   const newMap = {
     id: data.length,
     lat: currentPosition['lat'],
@@ -158,7 +159,7 @@ app.get('/new-map', (req, res) => {
 });
 
 app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
+  const currentPosition = JSON.parse(req.body.position);
   const newMap = {
     id: db.length,
     lat: currentPosition['lat'],
@@ -206,7 +207,7 @@ app.get('/new-map', (req, res) => {
 });
 
 app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
+  const currentPosition = JSON.parse(req.body.position);
   const newMap = {
     id: db.length,
     lat: currentPosition['lat'],
