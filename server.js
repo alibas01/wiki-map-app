@@ -13,8 +13,16 @@ const morgan     = require('morgan');
 const methodOverride = require('method-override')
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
+
+
+// PG database client/connection setup
+const { Pool } = require('pg');
+const dbParams = require('./lib/db.js');
+const db = new Pool(dbParams);
+db.connect().then(console.log('database connection established👌'));
+
 // Helper functions
-const db_helpers = require('./lib/db_helpers');
+const db_helpers = require('./lib/db_helpers')(db);
 const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
 const getMapsbyId = db_helpers.getMapsbyId;
 const getUsers = db_helpers.getUsers;
@@ -24,18 +32,6 @@ const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
 
-//temp data
-const database = require('./database');
-const locations = database.getAllLocations();
-
-// PG database client/connection setup
-const { Pool } = require('pg');
-const dbParams = require('./lib/db.js');
-const db = new Pool(dbParams);
-db.connect().then(console.log('connect to db!'));
-db.query(`SELECT title FROM maps LIMIT 5;`).then(
-  res => console.log(res.rows)
-)
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -72,59 +68,29 @@ app.use("/api/widgets", widgetsRoutes(db));
 // Home page
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
-app.get("/", (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    const templateVars = {
-      locations,
-    };
-    console.log(templateVars);
-    res.render('index', templateVars);
-  });
-});
+
+
 
 app.use('/public', express.static('public'));
 
-app.listen(PORT, () => {
-  console.log(`wikimapapp listening on port ${PORT}`);
-  console.log('Server running!');
+app.get("/", (req, res) => {
+  let map_id = 3;
+  getAllLocations(map_id).then(rows => {
+    const locations = rows;
+    const templateVars = { locations: locations };
+    res.render('index', templateVars);
+  })
+  .catch(err => res.status(500).send(err.stack));
 });
-
-//BELOW HERE SERVER-MAP
-
-const data = {
-  "userRandomID" : {id: "userRandomID", coords: {lat:42.3601, lng:-71.0589},
-    title: 'restaurant', category: 'restaurant', description: 'restaurant'},
-  "userRandomID2": {id: "userRandomID2", coords:{lat:42.8584, lng:-70.9300},
-    title: 'shopping mall', category: 'shopping mall', description: 'shopping mall'}
-};
-
 
 app.get('/points', (req, res) => {
-  locations.then(result => {
-    const locations_db = result;
-    const templateVars = {
-      greeting: 'welcome',
-      locations: locations_db,
-    };
+  let map_id = 2;
+  getAllLocations(map_id).then(rows => {
+    const locations = rows;
+    const templateVars = { greeting: 'welcome',locations: locations };
     res.render('points', templateVars);
-  });
-});
-
-app.get('/profile', (req, res) => {
-  //get current user profile
-  res.render('profile');
-});
-
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-app.get('/logout', (req, res) => {
-  res.redirect('/');
-});
-
-app.get('/register', (req, res) => {
-  res.render('register');
+  })
+  .catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/new', (req, res) => {
@@ -163,101 +129,83 @@ app.get('/detail/:id', (req, res) => {
   });
 });
 
-app.get('/new-map', (req, res) => {
-  res.render('new');
+app.get('/profile', (req, res) => {
+  //get current user profile
+  res.render('profile');
 });
-
-app.post('/new-map', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
-  const newMap = {
-    id: db.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${key}`);
-});
-
-//see specific details
-app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    let templateVars;
-    for (const map of locations) {
-      if (map['id'] === Number(req.params.id)) {
-        templateVars = {
-          lat: map['lat'],
-          long: map['long'],
-          title: map['name'],
-          description: map['description'],
-        };
-      }
-    }
-    res.render('detail', templateVars);
-  });
-});
-
-
 
 
 // GET /register
-app.get('/register', (req, res) => {
-  res.render('register');
-});
+// app.get("/register", (req, res) => {
+//   const user = users[req.session['user_id']];
+//   const templateVars = { user };
+//   if (!user) {
+//     res.render("register", templateVars);
+//   } else {
+//     res.redirect(`/`);
+//   }
+// });
 
 // POST /register
+// app.post("/register", (req, res) => {
+//   let email = req.body.email;
+//   let password = bcrypt.hashSync(req.body.password, salt);
+//   if (email !== "" && req.body.password !== "") {
+//     if (!isRegisteredBefore(users, email)) {
+//       let id = generateRandomString();
+//       let newUser = {id, email, password};
+//       users[id] = newUser;
+//       req.session['user_id'] = id;
+//       res.redirect("/urls");
+//     } else {
+//       res.status(400);
+//       res.send(`<html><body><h1>Error:400</h1> <h2><b>This email(${email}) registered before!!!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
+//     }
+//   } else {
+//     res.status(400);
+//     res.send('<html><body><h1>Error:400</h1> <h2><b>Email or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n');
+//   }
+// });
 
 
 // GET /login
-app.get('/login', (req, res) => {
-  res.render('login');
-});
+// app.get("/login", (req, res) => {
+//   const user = users[req.session['user_id']];
+//   const templateVars = { user: user };
+//   if (!user) {
+//     res.render("login", templateVars);
+//   } else {
+//     res.redirect(`/`);
+//   }
+// });
 
 // POST /login
-
+// app.post("/login", (req, res) => {
+//   let email = req.body.email;
+//   let password = req.body.password;
+//   if (isRegisteredBefore(users, email)) {
+//     if (isPasswordMatch(users, email, password)) {
+//       req.session['user_id'] = findId(users, email);
+//       res.redirect(`/urls`);
+//     } else {
+//       res.status(403);
+//       res.send(`<html><body><h1>Error:403</h1> <h2><b>Please check your password!!!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
+//     }
+//   } else {
+//     res.status(403);
+//     res.send(`<html><body><h1>Error:403</h1> <h2><b>This email(${email}) is not registered!!!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
+//   }
+// });
 
 // GET /logout
-app.get('/logout', (req, res) => {
-  res.redirect('/');
-});
+// app.get("/logout", (req, res) => {
+//   req.session['user_id'] = null;
+//   res.redirect(`/`);
+// });
 
 
-app.get('/new', (req, res) => {
-  res.render('new');
-});
-
-app.post('/new', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
-  const newMap = {
-    id: db.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${key}`);
-});
-
-//see specific details
-app.get('/detail/:id', (req, res) => {
-  locations.then(result => {
-    const locations = result;
-    let templateVars;
-    for (const map of locations) {
-      console.log(map['id'], req.params.id);
-      if (map['id'] === Number(req.params.id)) {
-        templateVars = {
-          lat: map['lat'],
-          long: map['long'],
-          title: map['name'],
-          description: map['description'],
-        };
-      }
-    }
-    console.log(templateVars);
-    res.render('detail', templateVars);
+app.listen(PORT, () => {
+  console.log(`wikimapapp listening on port ${PORT}`);
   });
 
-});
 
