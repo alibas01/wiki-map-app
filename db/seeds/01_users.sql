@@ -1,4 +1,4 @@
 
-INSERT INTO users (id, username, email, password) VALUES (1, 'alibas', 'alibas01@gmail.com', '12qw');
-INSERT INTO users (id, username, email, password) VALUES (2, 'hoopengsun', 'sunhaopeng2016@gmail.com', '12qw');
-INSERT INTO users (id, username, email, password) VALUES (3, 'perrydefayette', 'defayetteperry@gmail.com', '12qw');
+INSERT INTO users (username, email, password) VALUES ('alibas', 'alibas01@gmail.com', '12qw');
+INSERT INTO users (username, email, password) VALUES ('hoopengsun', 'sunhaopeng2016@gmail.com', '12qw');
+INSERT INTO users (username, email, password) VALUES ('perrydefayette', 'defayetteperry@gmail.com', '12qw');

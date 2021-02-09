@@ -9,6 +9,16 @@ const bodyParser = require("body-parser");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
+// Helper functions
+const db_helpers = require('./lib/db_helpers');
+const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
+const getMapsbyId = db_helpers.getMapsbyId;
+const getUsers = db_helpers.getUsers;
+const newUser = db_helpers.newUser;
+const newPoint = db_helpers.newPoint;
+const newMap = db_helpers.newMap;
+const newLike = db_helpers.newLike;
+const getAllLocations = db_helpers.getAllLocations;
 
 //temp data
 const database = require('./database');
@@ -66,7 +76,7 @@ app.get("/", (req, res) => {
 app.use('/public', express.static('public'));
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`wikimapapp listening on port ${PORT}`);
   console.log('Server running!');
 });
 
@@ -177,3 +187,57 @@ app.get('/detail/:id', (req, res) => {
     res.render('detail', templateVars);
   });
 });
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+app.get('/logout', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+
+
+app.get('/new-map', (req, res) => {
+  res.render('new');
+});
+
+app.post('/new-map', (req, res) => {
+  const currentPosition = JSON.parse(req.body.position)
+  const newMap = {
+    id: db.length,
+    lat: currentPosition['lat'],
+    long: currentPosition['lng'],
+    name: req.body.title,
+    description: req.body.description
+  };
+  res.redirect(`/detail/${key}`);
+});
+
+//see specific details
+app.get('/detail/:id', (req, res) => {
+  locations.then(result => {
+    const locations = result;
+    let templateVars;
+    for (const map of locations) {
+      console.log(map['id'], req.params.id);
+      if (map['id'] === Number(req.params.id)) {
+        templateVars = {
+          lat: map['lat'],
+          long: map['long'],
+          title: map['name'],
+          description: map['description'],
+        };
+      }
+    }
+    console.log(templateVars);
+    res.render('detail', templateVars);
+  });
+
+});
+
+
+
