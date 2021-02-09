@@ -198,17 +198,29 @@ app.get('/detail/:id', (req, res) => {
   });
 });
 
-app.get('/login', (req, res) => {
-  res.render('login');
-});
-app.get('/logout', (req, res) => {
-  res.redirect('/');
-});
 
+
+
+// GET /register
 app.get('/register', (req, res) => {
   res.render('register');
 });
 
+// POST /register
+
+
+// GET /login
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+
+// POST /login
+
+
+// GET /logout
+app.get('/logout', (req, res) => {
+  res.redirect('/');
+});
 
 
 app.get('/new', (req, res) => {
