@@ -55,7 +55,7 @@ app.get("/", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+  console.log(`wikimapapp listening on port ${PORT}`);
   console.log('Server running!');
 });
 
@@ -145,9 +145,7 @@ app.get('/register', (req, res) => {
   res.render('register');
 });
 
-app.listen(port, () => {
-  console.log('Server running!');
-});
+
 
 app.get('/new-map', (req, res) => {
   res.render('new');
