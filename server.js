@@ -3,12 +3,16 @@ require('dotenv').config();
 
 // Web server config
 const PORT       = process.env.PORT || 8080;
+const salt       = 10;
 const ENV        = process.env.ENV || "development";
 const express    = require("express");
 const bodyParser = require("body-parser");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
+const methodOverride = require('method-override')
+const cookieSession = require('cookie-session');
+const bcrypt = require('bcrypt');
 // Helper functions
 const db_helpers = require('./lib/db_helpers');
 const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
@@ -42,6 +46,12 @@ app.use("/styles", sass({
   outputStyle: 'expanded'
 }));
 app.use(express.static("public"));
+app.use(methodOverride('_method'));
+app.use(morgan('tiny'));
+app.use(cookieSession({
+  name: 'session',
+  keys: ['key1', 'key2']
+}));
 
 // Separated Routes for each Resource
 // Note: Feel free to replace the example routes below with your own
@@ -115,6 +125,22 @@ app.get('/register', (req, res) => {
   res.render('register');
 });
 
+app.get('/new', (req, res) => {
+  res.render('new');
+});
+
+app.post('/new', (req, res) => {
+  const currentPosition = JSON.parse(req.body.position)
+  const newMap = {
+    id: data.length,
+    lat: currentPosition['lat'],
+    long: currentPosition['lng'],
+    name: req.body.title,
+    description: req.body.description
+  };
+  res.redirect(`/detail/${key}`);
+});
+
 app.get('/new-map', (req, res) => {
   res.render('new');
 });
@@ -122,7 +148,7 @@ app.get('/new-map', (req, res) => {
 app.post('/new-map', (req, res) => {
   const currentPosition = JSON.parse(req.body.position)
   const newMap = {
-    id: data.length,
+    id: db.length,
     lat: currentPosition['lat'],
     long: currentPosition['lng'],
     name: req.body.title,
@@ -143,6 +169,4 @@ app.get('/detail/:id', (req, res) => {
     res.render('detail', templateVars);
   });
 });
-
-
 
