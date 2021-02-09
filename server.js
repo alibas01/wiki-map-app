@@ -102,6 +102,10 @@ app.get('/points', (req, res) => {
   });
 });
 
+app.get('/error', (req, res) => {
+  res.render('error');
+});
+
 app.get('/profile', (req, res) => {
   //get current user profile
   res.render('profile');
@@ -131,7 +135,7 @@ app.post('/new-map', (req, res) => {
     name: req.body.title,
     description: req.body.description
   };
-  res.redirect(`/detail/${key}`);
+  res.redirect(`/detail/${newMap.id}`);
 });
 
 //see specific details
