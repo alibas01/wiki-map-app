@@ -28,8 +28,10 @@ const locations = database.getAllLocations();
 const { Pool } = require('pg');
 const dbParams = require('./lib/db.js');
 const db = new Pool(dbParams);
-db.connect();
-
+db.connect().then(console.log('connect to db!'));
+db.query(`SELECT title FROM maps LIMIT 5;`).then(
+  res => console.log(res.rows)
+)
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
 //         The :status token will be colored red for server error codes, yellow for client error codes, cyan for redirection codes, and uncolored for all other codes.
@@ -61,8 +63,17 @@ app.use("/api/widgets", widgetsRoutes(db));
 // Warning: avoid creating more routes in this file!
 // Separate them into separate routes files (see above).
 app.get("/", (req, res) => {
-  res.render("index");
+  locations.then(result => {
+    const locations = result;
+    const templateVars = {
+      locations,
+    };
+    console.log(templateVars);
+    res.render('index', templateVars);
+  });
 });
+
+app.use('/public', express.static('public'));
 
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);
@@ -138,10 +149,43 @@ app.get('/detail/:id', (req, res) => {
         };
       }
     }
-    console.log(templateVars);
     res.render('detail', templateVars);
   });
+});
 
+app.get('/new-map', (req, res) => {
+  res.render('new');
+});
+
+app.post('/new-map', (req, res) => {
+  const currentPosition = JSON.parse(req.body.position)
+  const newMap = {
+    id: db.length,
+    lat: currentPosition['lat'],
+    long: currentPosition['lng'],
+    name: req.body.title,
+    description: req.body.description
+  };
+  res.redirect(`/detail/${key}`);
+});
+
+//see specific details
+app.get('/detail/:id', (req, res) => {
+  locations.then(result => {
+    const locations = result;
+    let templateVars;
+    for (const map of locations) {
+      if (map['id'] === Number(req.params.id)) {
+        templateVars = {
+          lat: map['lat'],
+          long: map['long'],
+          title: map['name'],
+          description: map['description'],
+        };
+      }
+    }
+    res.render('detail', templateVars);
+  });
 });
 
 app.get('/login', (req, res) => {
@@ -194,6 +238,4 @@ app.get('/detail/:id', (req, res) => {
   });
 
 });
-
-
 
