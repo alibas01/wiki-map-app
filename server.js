@@ -106,11 +106,11 @@ app.get('/register', (req, res) => {
   res.render('register');
 });
 
-app.get('/new-map', (req, res) => {
+app.get('/new', (req, res) => {
   res.render('new');
 });
 
-app.post('/new-map', (req, res) => {
+app.post('/new', (req, res) => {
   const currentPosition = JSON.parse(req.body.position)
   const newMap = {
     id: data.length,
@@ -157,11 +157,11 @@ app.get('/register', (req, res) => {
 
 
 
-app.get('/new-map', (req, res) => {
+app.get('/new', (req, res) => {
   res.render('new');
 });
 
-app.post('/new-map', (req, res) => {
+app.post('/new', (req, res) => {
   const currentPosition = JSON.parse(req.body.position)
   const newMap = {
     id: db.length,
