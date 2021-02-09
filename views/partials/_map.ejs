@@ -10,7 +10,7 @@
     let positionCurrentObjCenter = {lat: Number(positionCurrentObj[0]), lng: Number(positionCurrentObj[1])};
 
     const total = document.getElementById("total").innerHTML;
-    for (let i = 1; i <= total; i++){
+    for (let i = 0; i < total; i++){
       let title = "title" + i;
       let position = "position" + i;
       let description = "description" + i;
@@ -23,8 +23,8 @@
     }
 
     function initMap(){
-      const options ={
-        zoom: 10,
+      const options = {
+        zoom: 8,
         center: positionCurrentObjCenter
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
