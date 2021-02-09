@@ -171,3 +171,6 @@ app.get('/detail/:id', (req, res) => {
   });
 });
 
+app.get('/search', (req, res) => {
+  res.render('search');
+})
