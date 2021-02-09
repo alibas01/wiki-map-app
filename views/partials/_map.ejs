@@ -1,33 +1,47 @@
 <div>
   <script>
-    const titleViewed = document.getElementById("title").innerHTML;
-    const positionViewed = document.getElementById("position").innerHTML;
-    console.log(positionViewed);
+    let markers = [];
+    const current = document.getElementById("current").innerHTML;
+    let titleID = "title" + current;
+    let positionID = "position" + current;
+    let titleCurrent = document.getElementById(titleID).innerHTML;
+    let positionCurrent = document.getElementById(positionID).innerHTML;
+    let positionCurrentObj = positionCurrent.split(" ");
+    let positionCurrentObjCenter = {lat: Number(positionCurrentObj[0]), lng: Number(positionCurrentObj[1])};
 
-    const positionObj = positionViewed.split(" ");
-    const positionImport = {lat: Number(positionObj[0]), lng: Number(positionObj[1])};
-    console.log(titleViewed, positionImport);
-    const markers = [
-        {coords: positionImport, title: titleViewed},
-        {coords:{lat:42.8584, lng:-70.9300}, title: 'shopping mall'}
-    ];
+    const total = document.getElementById("total").innerHTML;
+    for (let i = 1; i <= total; i++){
+      let title = "title" + i;
+      let position = "position" + i;
+      let description = "description" + i;
+      let titles = document.getElementById(title).innerHTML;
+      let positions = document.getElementById(position).innerHTML;
+      let descriptions = document.getElementById(description).innerHTML;
+      let positionObj = positions.split(" ");
+      let positionImport = {lat: Number(positionObj[0]), lng: Number(positionObj[1])};
+      markers.push({coords: positionImport, title: titles, description: descriptions})
+    }
 
     function initMap(){
       const options ={
-        zoom: 8,
-        center: positionImport
+        zoom: 10,
+        center: positionCurrentObjCenter
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
+
       const icon = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
 
       const addMarker = function (obj) {
         const marker = new google.maps.Marker({
-        position: obj.coords,
-        map: map,
-        animation: google.maps.Animation.DROP,
+          position: obj.coords,
+          map: map,
+          animation: google.maps.Animation.DROP,
         });
 
-        marker.setIcon(icon);
+        if (obj.title === titleCurrent) {
+          marker.setIcon(icon);
+        }
+
         const infoWindow = new google.maps.InfoWindow({
           content: `<h3>${obj.title}</h3>`
         });
@@ -38,7 +52,9 @@
           map.setCenter(marker.getPosition());
           document.getElementById("title").innerHTML = obj.title;
           const currentPosition = obj.coords.lat + ' ' + obj.coords.lng
-          document.getElementById("position").value = currentPosition;
+          // document.getElementById("position").innerHTML = currentPosition;
+          // console.log(obj.description);
+          document.getElementById("description").innerHTML = obj.description;
         });
       }
 
