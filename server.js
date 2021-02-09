@@ -50,6 +50,96 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}`);
+
+const port = 8080;
+
+const database = require('./database');
+const locations = database.getAllLocations();
+
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({extended: true}));
+
+app.use('/public', express.static('public'));
+
+
+
+
+
+
+app.get('/', (req, res) => {
+  res.render('index');
 });
+
+
+
+app.get('/points', (req, res) => {
+  locations.then(result => {
+    const locations_db = result;
+    const templateVars = {
+      greeting: 'welcome',
+      locations: locations_db,
+    };
+    res.render('points', templateVars);
+  });
+});
+
+app.get('/profile', (req, res) => {
+  //get current user profile
+  res.render('profile');
+});
+
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+app.get('/logout', (req, res) => {
+  res.redirect('/');
+});
+
+app.get('/register', (req, res) => {
+  res.render('register');
+});
+
+app.listen(port, () => {
+  console.log('Server running!');
+});
+
+app.get('/new-map', (req, res) => {
+  res.render('new');
+});
+
+app.post('/new-map', (req, res) => {
+  const currentPosition = JSON.parse(req.body.position)
+  const newMap = {
+    id: db.length,
+    lat: currentPosition['lat'],
+    long: currentPosition['lng'],
+    name: req.body.title,
+    description: req.body.description
+  };
+  res.redirect(`/detail/${key}`);
+});
+
+//see specific details
+app.get('/detail/:id', (req, res) => {
+  locations.then(result => {
+    const locations = result;
+    let templateVars;
+    for (const map of locations) {
+      console.log(map['id'], req.params.id);
+      if (map['id'] === Number(req.params.id)) {
+        templateVars = {
+          lat: map['lat'],
+          long: map['long'],
+          title: map['name'],
+          description: map['description'],
+        };
+      }
+    }
+    console.log(templateVars);
+    res.render('detail', templateVars);
+  });
+
+});
+
+
+
