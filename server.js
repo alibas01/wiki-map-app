@@ -60,11 +60,18 @@ app.use(cookieSession({
 // Note: Feel free to replace the example routes below with your own
 const usersRoutes = require("./routes/users");
 const widgetsRoutes = require("./routes/widgets");
+// const loginRoute = require("./routes/login");
+// const logoutRoute = require("./routes/logout");
+// const registerRoute = require("./routes/register");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));
+// app.use("/login", loginRoute(db));
+// app.use("/logout", logoutRoute(db));
+// app.use("/register", registerRoute(db));
+
 // Note: mount other resources here, using the same pattern above
 
 
@@ -221,7 +228,7 @@ app.post("/login", (req, res) => {
   }})
 });
 
-// GET /logout
+//GET /logout
 app.get("/logout", (req, res) => {
   req.session['user_id'] = null;
   res.redirect(`/`);
