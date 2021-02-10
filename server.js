@@ -106,7 +106,7 @@ app.post('/new', (req, res) => {
 
 //see specific details
 app.get('/detail/:id', (req, res) => {
-  let map_id = req.params.id;
+  let map_id = 4;
   getAllLocations(map_id).then(result => {
     const locations = result;
     const id_current = req.params.id;
