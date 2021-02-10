@@ -31,6 +31,9 @@ const newPoint = db_helpers.newPoint;
 const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
+const findUserIdByName = db_helpers.findUserIdByName;
+const getPassword = db_helpers.getPassword;
+const isRegisteredBefore = db_helpers.isRegisteredBefore;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -136,36 +139,42 @@ app.get('/profile', (req, res) => {
 
 
 // GET /register
-// app.get("/register", (req, res) => {
-//   const user = users[req.session['user_id']];
-//   const templateVars = { user };
-//   if (!user) {
-//     res.render("register", templateVars);
-//   } else {
-//     res.redirect(`/`);
-//   }
-// });
+app.get("/register", (req, res) => {
+  const user = req.session['user_id'];
+  const templateVars = { user };
+  if (!user) {
+    res.render("register", templateVars);
+  } else {
+    res.redirect(`/`);
+  }
+});
 
-// POST /register
-// app.post("/register", (req, res) => {
-//   let email = req.body.email;
-//   let password = bcrypt.hashSync(req.body.password, salt);
-//   if (email !== "" && req.body.password !== "") {
-//     if (!isRegisteredBefore(users, email)) {
-//       let id = generateRandomString();
-//       let newUser = {id, email, password};
-//       users[id] = newUser;
-//       req.session['user_id'] = id;
-//       res.redirect("/urls");
-//     } else {
-//       res.status(400);
-//       res.send(`<html><body><h1>Error:400</h1> <h2><b>This email(${email}) registered before!!!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
-//     }
-//   } else {
-//     res.status(400);
-//     res.send('<html><body><h1>Error:400</h1> <h2><b>Email or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n');
-//   }
-// });
+// // POST /register
+app.post("/register", (req, res) => {
+  let user = req.body.user;
+  let email = req.body.email;
+  let password = bcrypt.hashSync(req.body.pass, salt);
+  let isRegistered = true;
+  isRegisteredBefore(user).then(data => {if(!data){isRegistered = false}})///
+  if (user !== "" && req.body.pass !== "") {
+    if (!isRegistered) {
+      let newUser = {user, email, password};
+      newUser(newUser);
+      req.session['user_id'] = user;
+      res.redirect("/");
+    } else {
+      res.status(400);
+      let error_message = `<h1>Error:400</h1> <h2><b>This email(${user}) registered before!!!</h2><h3><a href="/register">Register</a></h3></b>`;
+      templateVars ={ error_message }
+      res.render("error", templateVars);
+    }
+  } else {
+    res.status(400);
+    let error_message = `<h1>Error:400</h1> <h2><b>Email or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></b>`;
+      templateVars ={ error_message }
+      res.render("error", templateVars);
+  }
+});
 
 
 // GET /login
