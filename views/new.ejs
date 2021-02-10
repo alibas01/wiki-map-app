@@ -20,29 +20,37 @@
     <%- include('partials/_click') %>
 
     <div class="new-map-box">
-      <form class="form-inline" action="/new-map" method="POST">
+      <form class="form-inline" id="new-map-info" action="/new-map" method="POST">
         <div id="current-position">
           <h1>Create A New Map</h1>
+
           <div class="flex-row">
             <label for="title">Title:</label>
-            <input type="text" name="title" placeholder="Title">
+            <input id="map-title" type="text" name="title" placeholder="Title">
           </div><br>
+
           <div class="flex-row">
             <label for="city">City:</label>
-            <input type="text" name="city" placeholder="City">
+            <input id="map-city" type="text" name="city" placeholder="City">
           </div><br>
+
           <div class="flex-row">
             <label for="privacy">Visibility:</label>
-            <select name="privacy">
+            <select id="map-vis" name="privacy">
               <option value="public">Public</option>
               <option value="Private">Private</option>
             </select>
-          </div><br>
-            <div class="flex-column">
-              <br><button type="submit" class="btn">Start!</button>
-            </div>
           </div>
-        </form>
+
+          <div class="flex-column">
+            <br><button type="submit" class="btn">Start!</button>
+          </div>
+
+          <div class="error-box" style="display: none">
+            <p>Please fill in all fields</p>
+          </div>
+        </div>
+      </form>
     </div>
 
     <div id="map"></div>

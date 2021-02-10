@@ -121,12 +121,22 @@ body {
   .new-map-box {
     z-index: 1;
     position: absolute;
-    margin: auto auto;
+    top: 25%;
+    left: 50%;
+    transform: translate(-50%, 0);
 
     background-color: #FFF;
     padding: 1em;
     border-radius: 25px;
     box-shadow: 2px 2px 5px black;
+
+    .error-box {
+      background-color: rgb(228, 50, 50);
+      color: $color3;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1em;
+    }
   }
 }
 
@@ -151,7 +161,6 @@ body {
   .zoom-control-out {
     border: none;
     border-radius: 0 0 10px 10px;
-    // box-shadow: 1px 1px 5px;
     background-color: $color4;
     padding: 0.1em 0.3em;
     margin: 0;
