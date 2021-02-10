@@ -33,6 +33,7 @@ const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
 const getFavouritesById = db_helpers.getFavouritesById;
 const search = db_helpers.search;
+const getAllMaps = db_helpers.getAllMaps;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -69,10 +70,8 @@ app.use("/api/widgets", widgetsRoutes(db));
 app.use('/public', express.static('public'));
 
 app.get("/", (req, res) => {
-  let map_id = 9;
-  getAllLocations(map_id).then(rows => {
-    const locations = rows;
-    const templateVars = { locations: locations };
+  getAllMaps().then(rows => {
+    const templateVars = { maps: rows };
     res.render('index', templateVars);
   })
   .catch(err => res.status(500).send(err.stack));
@@ -82,7 +81,7 @@ app.get('/points', (req, res) => {
   let map_id = 4;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
-    const templateVars = { greeting: 'welcome',locations: locations };
+    const templateVars = { greeting: 'welcome',locations: locations, map_id };
     res.render('points', templateVars);
   })
   .catch(err => res.status(500).send(err.stack));
