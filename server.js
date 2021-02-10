@@ -79,7 +79,7 @@ app.get("/", (req, res) => {
 });
 
 app.get('/points', (req, res) => {
-  let map_id = 9;
+  let map_id = 4;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
     const templateVars = { greeting: 'welcome',locations: locations };
@@ -105,11 +105,11 @@ app.post('/new', (req, res) => {
 });
 
 //see specific details
-app.get('/detail/:id', (req, res) => {
-  let map_id = 4;
+app.get('/detail/:map_id/:location_id', (req, res) => {
+  let map_id = req.params.map_id || 4;
   getAllLocations(map_id).then(result => {
     const locations = result;
-    const id_current = req.params.id;
+    const id_current = req.params.location_id;
     const templateVars = {
       locations,
       id_current,
@@ -126,7 +126,7 @@ app.post('/search', (req, res) => {
   const city = req.body.city;
   const description = req.body.description;
   search(city, description).then(result => {
-    console.log(result);
+    // console.log(result);
     const templateVars = { greeting: 'welcome', locations: result };
     res.render('results', templateVars);
   })

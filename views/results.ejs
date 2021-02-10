@@ -11,22 +11,24 @@
   <table class="table">
     <thead>
       <tr>
-        <th scope="col">Id</th>
+        <th scope="col">Location Id</th>
+        <th scope="col">Map Id</th>
         <th scope="col">Title</th>
-        <th scope="col">Position(lat)</th>
-        <th scope="col">Position(lng)</th>
+        <th hidden scope="col">Position(lat)</th>
+        <th hidden scope="col">Position(lng)</th>
         <th scope="col">Description</th>
         <th scope="col">Detail</th>
       </tr>
     </thead>
     <% for(const location of locations) { %>
       <tr>
+        <td><%= location['id'] %></td>
         <td><%= location['map_id'] %></td>
         <td><%= location['name'] %></td>
-        <td><%= location['lat'] %></td>
-        <td><%= location['long'] %></td>
+        <td hidden><%= location['lat'] %></td>
+        <td hidden><%= location['long'] %></td>
         <td><%= location['description'] %></td>
-        <form method="GET" action="/detail/<%= location['id'] %>">
+        <form method="GET" action="/detail/<%= location['map_id'] %>/<%= location['id'] %>">
           <td><button type="submit" class="btn btn-outline-primary">Details</button></td>
         </form>
       </tr>
