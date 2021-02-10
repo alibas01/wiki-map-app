@@ -13,36 +13,20 @@
       });
     </script>
 
-    <title>map test</title>
+    <title>Create New Map - MAP APP</title>
   </head>
   <body>
     <%- include('partials/_nav') %>
     <%- include('partials/_click') %>
-    <h1>Create your own map</h1>
+    <div class="new-map-box">
+      <h1 class="transparent-title">Click Anywhere!</h1>
+    </div>
     <div id="map"></div>
-    <form class="form-inline" action="/new-map" method="POST">
-      <div id="current-position">
-        <h4>Map details:</h4>
-        <h4>position selected:</h4>
-        <p id="position">click the map or select current position</p>
-        <button id="auto-input" class="btn btn-outline-primary">use this position</button>
-        <input id="positionImport" type="text" name="position" placeholder="position">
-        <input type="text" name="title" placeholder="title">
-        <h4>category</h4>
-        <select name="category" id="category">
-          <option value="drinking">drinking</option>
-          <option value="restaurants">restaurants</option>
-          <option value="art galleries">art galleries</option>
-          <option value="historic places">historic places</option>
-          <option value="parks">parks</option>
-          <option value="shopping malls">shopping malls</option>
-        </select>
-        <textarea name="description" type="text" placeholder="description"></textarea>
-        <button type="submit" class="btn btn-outline-primary">submit</button>
+    <div style="display: none">
+      <div class="controls zoom-control">
+        <button class="zoom-control-in" title="Zoom In">+</button>
+        <button class="zoom-control-out" title="Zoom Out">−</button>
       </div>
-    </form>
-    <form method="GET" action="/">
-      <button type="submit" class="btn btn-outline-primary">Home</button>
-    </form>
+    </div>
   </body>
 </html>

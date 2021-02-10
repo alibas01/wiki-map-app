@@ -1,12 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Error</title>
-</head>
-<body>
-  <%= error_message %>
-</body>
+  <head>
+    <%- include('partials/_includes') %>
+
+    <title>ERROR - MAP APP</title>
+  </head>
+
+  <body>
+    <div class='center error-layout'>
+      <h1>Error</h1>
+      <div class="line"></div>
+      <!-- ERROR CODES HERE -->
+      <h2>404</h2>
+      <%=error_message%>
+    </div>
+  </body>
 </html>

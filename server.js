@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 // load .env data into process.env
 require('dotenv').config();
 
@@ -10,7 +11,7 @@ const bodyParser = require("body-parser");
 const sass       = require("node-sass-middleware");
 const app        = express();
 const morgan     = require('morgan');
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 
@@ -84,31 +85,34 @@ app.use("/api/widgets", widgetsRoutes(db));
 app.use('/public', express.static('public'));
 
 app.get("/", (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   let map_id = 3;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
-    const templateVars = { locations: locations };
+    const templateVars = { user, locations };
     res.render('index', templateVars);
   })
   .catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/points', (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   let map_id = 2;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
-    const templateVars = { greeting: 'welcome',locations: locations };
+    const templateVars = { user:user, greeting: 'welcome',locations: locations };
     res.render('points', templateVars);
   })
   .catch(err => res.status(500).send(err.stack));
 });
 
-app.get('/new', (req, res) => {
+app.get('/new-map', (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   res.render('new');
 });
 
 app.post('/new', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
+  const currentPosition = JSON.parse(req.body.position);
   const newMap = {
     id: data.length,
     lat: currentPosition['lat'],
@@ -116,11 +120,12 @@ app.post('/new', (req, res) => {
     name: req.body.title,
     description: req.body.description
   };
-  res.redirect(`/detail/${key}`);
+  res.redirect(`/detail/${newMap.id}`);
 });
 
 //see specific details
 app.get('/detail/:id', (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   locations.then(result => {
     const locations = result;
     let templateVars;
@@ -141,6 +146,7 @@ app.get('/detail/:id', (req, res) => {
 
 app.get('/profile', (req, res) => {
   //get current user profile
+  const user = req.session['user_id']; // this should be on all get routes
   res.render('profile');
 });
 
