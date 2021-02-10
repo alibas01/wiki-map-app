@@ -98,6 +98,11 @@ app.get('/new-map', (req, res) => {
   res.render('new');
 });
 
+  // app.post('/new-map', (req, res) => {
+  //   console.log('new map submit', req.body);
+  //   res.status(200).json('success');
+  // });
+
 app.post('/new', (req, res) => {
   const currentPosition = JSON.parse(req.body.position);
   const newMap = {

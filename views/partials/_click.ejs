@@ -1,6 +1,7 @@
 <div>
   <script>
     function initMap(){
+      let markerList = [];
       const myLatlng = { lat: 43.6532, lng: -79.3832 };
       const options ={
         zoom: 10,
@@ -11,27 +12,25 @@
       const image = "imgs/map-pin.png";
       initZoomControl(map);
 
-        // Create the initial InfoWindow.
-      let infoWindow = new google.maps.InfoWindow({});
 
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            infoWindow.setPosition(pos);
-            infoWindow.setContent("Current Location");
-            infoWindow.open(map);
-            map.setCenter(pos);
-            // document.getElementById("position").innerHTML = JSON.stringify(pos);
-          },
-          () => {
-            handleLocationError(true, infoWindow, map.getCenter());
-          }
-        );
-      }
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition(
+      //     (position) => {
+      //       const pos = {
+      //         lat: position.coords.latitude,
+      //         lng: position.coords.longitude,
+      //       };
+      //       infoWindow.setPosition(pos);
+      //       infoWindow.setContent("Current Location");
+      //       infoWindow.open(map);
+      //       map.setCenter(pos);
+      //       // document.getElementById("position").innerHTML = JSON.stringify(pos);
+      //     },
+      //     () => {
+      //       // handleLocationError(true, infoWindow, map.getCenter());
+      //     }
+      //   );
+      // }
 
       //manually enable zoom controls
       function initZoomControl(map) {
@@ -47,59 +46,21 @@
       }
 
 
-      infoWindow.open(map);
       // Configure the click listener.
       map.addListener("click", (mapsMouseEvent) => {
-        $('.new-map-box').css('display', 'none');
+        $('#new-point').css('display', 'block');
 
-        // Close the current InfoWindow.
-        infoWindow.close();
-        // infoWindow = new google.maps.InfoWindow({
-        //   position: mapsMouseEvent.latLng,
-        // });
+        addMarker(mapsMouseEvent.latLng, image);
 
-        const infoContent =
-        `<form class="form-inline" action="/new-map" method="POST">` +
-          `<div id="current-position">` +
-            `<h4>New Point:</h4>` +
-            `<div class="flex-row">` +
-              `<label for="position">Position:</label>` +
-              `<input id="positionImport" type="text" name="position" placeholder="position">` +
-            `</div><br>` +
-            `<div class="flex-row">` +
-              `<label for="title">Title:</label>` +
-              `<input type="text" name="title" placeholder="title">` +
-            `</div><br>` +
-            `<div class="flex-row">` +
-              `<label for="category">Category:</label>` +
-              `<select name="category" id="category">` +
-                `<option value="drinking">drinking</option>` +
-                `<option value="restaurants">restaurants</option>` +
-                `<option value="art galleries">art galleries</option>` +
-                `<option value="historic places">historic places</option>` +
-                `<option value="parks">parks</option>` +
-                `<option value="shopping malls">shopping malls</option>` +
-              `</select>` +
-            `</div><br>` +
-              `<div class="flex-column">` +
-                `<textarea name="description" type="text" placeholder="description"></textarea><br>` +
-                `<button type="submit" class="btn">Save</button>` +
-              `</div>` +
-            `</div>` +
-          `</form>`;
+        //set view with lat and long
+        $('#point-lat').text(mapsMouseEvent.latLng.toJSON().lat);
+        $('#point-long').text(mapsMouseEvent.latLng.toJSON().lng);
 
-        // Create a new InfoWindow each time there is a click
-        infoWindow = new google.maps.InfoWindow({
-          content: infoContent,
-          position: mapsMouseEvent.latLng,
-          pixelOffset: new google.maps.Size(0, -75)
-        });
+        //hide menu
+        $('.collapse').collapse("show");
 
-        const marker = new google.maps.Marker({
-          position: mapsMouseEvent.latLng,
-          map,
-          icon: {url: image, scaledSize: new google.maps.Size(50, 50)}
-        });
+
+        console.log(mapsMouseEvent.latLng.toJSON());
 
 
         // document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
@@ -107,9 +68,22 @@
         // infoWindow.setContent({content: infoContent});
         map.setZoom(12);
         // map.setCenter({lat: marker.position.lat(), lng: marker.position.lng()});
-        infoWindow.open(map);
+
       });
+
+      // Adds a marker to the map and push to the array.
+      function addMarker(location, image) {
+        const marker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: {url: image, scaledSize: new google.maps.Size(50, 50)}
+        });
+        markerList.push(marker);
+      }
     }
+
+
+
   </script>
   <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"

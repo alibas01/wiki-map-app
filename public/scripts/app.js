@@ -1,12 +1,13 @@
+/* eslint-disable no-undef */
 $(document).ready(() => {
 
   let newMap = {
     points: []
   };
 
-  $('#map-title')[0].value = '';
-  $('#map-city')[0].value = '';
-  $('#map-vis')[0].value = '';
+  $('#map-title')[0].value = 'a';
+  $('#map-city')[0].value = 'a';
+  $('#map-vis')[0].value = 'Public';
 
   $("#new-map-info").on("submit", function(event) {
     // Prevent the default form submission
@@ -33,14 +34,45 @@ $(document).ready(() => {
       $(".new-map-box").css('display', 'none');
     }
 
-
-    $(".form-inline").on("submit", function(event) {
-      // Prevent the default form submission
-      event.preventDefault();
-      console.log('point.');
-    });
-
     console.log(newMap);
+  });
+
+
+
+  $("#new-point").on("submit", function(event) {
+    // Prevent the default form submission
+    event.preventDefault();
+
+    //fetch field data
+    const title =       $('#point-title')[0];
+    const lat =         $('#point-lat')[0];
+    const long =        $('#point-long')[0];
+    const category =    $('#point-category')[0];
+    const description = $('#point-desc')[0];
+
+    //error handling
+    if (!title.value.length ||
+        !category.value.length ||
+        !description.value.length) {
+      //show/hide error messages
+      $('.error-box').slideToggle(200,'swing');
+    } else {
+      //save data
+      const newPoint = { name: title.value, lat: lat.textContent, long: long.textContent, description: description.value};
+      console.log(newPoint);
+      newMap['title'] = title.value;
+      // newMap['position'] = position.value;
+      newMap['category'] = category.value;
+      newMap['description'] = description.value;
+    }
+
+    console.log(markerList);
+    //hide box
+
+    // INSERT INTO locations (
+    // name, map_id, lat, long, user_id, picture_url, description, website
+    // ) VALUES ('Efes Kebab House', 1, 43.680319, -79.33838100000001, 1, 'https://thumbnail.imgbin.com/0/9/7/imgbin-south-america-canada-organization-of-american-states-continent-map-canada-6PGHgTE8gvVsvPLhK5tpXfn2f_t.jpg', 'Doner kebab, falafel & other traditional Turkish dishes round out the menu at this relaxed eatery.', 'efeskebabhouse.ca');
+
   });
 
   // $.ajax({

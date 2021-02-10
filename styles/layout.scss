@@ -138,6 +138,24 @@ body {
       margin-bottom: 1em;
     }
   }
+
+  #new-point {
+    background-color: rgba(187, 187, 187, 0.534);
+    position: absolute;
+    right: 0;
+    margin: 1em;
+    border-radius: 10px;
+
+    z-index: 4;
+
+    .error-box {
+      background-color: rgb(228, 50, 50);
+      color: $color3;
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 1em;
+    }
+  }
 }
 
 .controls.zoom-control {

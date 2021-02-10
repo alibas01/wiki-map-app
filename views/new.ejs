@@ -60,5 +60,64 @@
         <button class="zoom-control-out" title="Zoom Out">−</button>
       </div>
     </div>
+
+    <form id="new-point" class="form-inline" action="/new-map" method="POST">
+
+      <!--Navbar-->
+      <nav class="navbar">
+
+        <!-- Navbar brand -->
+        <h4 class="navbar-brand">Edit Point</h4>
+
+        <!-- Collapse button -->
+        <button class="navbar-toggler toggler-example" type="button" data-toggle="collapse" data-target="#navbarSupportedContent1" aria-controls="navbarSupportedContent1" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="dark-blue-text">
+            <i class="fa fa-bars fa-1x"></i>
+          </span>
+        </button>
+
+        <!-- Collapsible content -->
+        <div class="collapse navbar-collapse" id="navbarSupportedContent1">
+          <div id="current-position">
+
+            <div class="flex-row">
+              <p><b>Position: </b> <br>Lat: <span id="point-lat"></span><br>Long: <span id="point-long"></span></p>
+            </div><br>
+
+            <div class="flex-row">
+              <label for="title">Title:</label>
+              <input type="text" name="title" placeholder="title" id="point-title">
+            </div><br>
+
+            <div class="flex-row">
+              <label for="category">Category:</label>
+              <select name="category" id="point-category">
+                <option value="drinking">drinking</option>
+                <option value="restaurants">restaurants</option>
+                <option value="art galleries">art galleries</option>
+                <option value="historic places">historic places</option>
+                <option value="parks">parks</option>
+                <option value="shopping malls">shopping malls</option>
+              </select>
+            </div><br>
+
+            <div class="flex-column">
+              <textarea name="description" type="text" placeholder="description" id="point-desc"></textarea><br>
+              <button type="submit" class="btn" data-toggle="collapse" data-target="#navbarSupportedContent1">Save</button>
+            </div>
+
+            <div class="error-box" style="display: none">
+              <p>Please fill in all fields</p>
+            </div>
+          </div>
+
+        </div>
+        <!-- Collapsible content -->
+
+      </nav>
+      <!--/.Navbar-->
+
+
+    </form>
   </body>
 </html>
