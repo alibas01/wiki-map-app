@@ -8,22 +8,7 @@
   <%- include('partials/_nav') %>
 
   <h3 id="title">My Favorites</h3>
-  <div id="favourites">
-    <% for(const favourite of favourites) { %>
-      <div class="col-md-6 grid-item">
-        <div class="card flex-md-row mb-4 box-shadow h-md-250">
-          <div class="card-body d-flex flex-column align-items-start">
-            <strong class="d-inline-block mb-2 text-success">Map Id: <%= favourite['id'] %></strong>
-            <h3 class="mb-0"><%= favourite['title'] %></h3>
-            <form method="GET" action="/detail/<%= favourite['id'] %>/1">
-              <td><button type="submit" class="btn btn-outline-primary">All locations</button></td>
-            </form>
-            <p class="card-text mb-auto">City: <%= favourite['city'] %></p>
-          </div>
-        </div>
-      </div>
-    <% } %>
-  </div>
+  <div id="favourites"></div>
 
 </body>
 </html>

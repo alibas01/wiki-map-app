@@ -18,7 +18,8 @@ const cookieSession = require('cookie-session');
 const { Pool } = require('pg');
 const dbParams = require('./lib/db.js');
 const db = new Pool(dbParams);
-db.connect().then(console.log('database connection established👌'));
+db.connect().then(console.log('database connection established👌'))
+db.query(`SELECT id FROM users`).then(data => console.log(data.rows));
 
 // Helper functions
 const db_helpers = require('./lib/db_helpers')(db);
@@ -34,9 +35,10 @@ const findUserIdByName = db_helpers.findUserIdByName;
 const getPassword = db_helpers.getPassword;
 const isRegisteredBefore = db_helpers.isRegisteredBefore;
 const getAllMaps = db_helpers.getAllMaps;
-const getFavouritesById = db_helpers.getFavouritesById;
+const getFavouritesByUserName = db_helpers.getFavouritesByUserName;
 const search = db_helpers.search;
 const getIdByUserName = db_helpers.getIdByUserName;
+const deleteFavourites = db_helpers.deleteFavourites;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -161,13 +163,33 @@ app.post('/search', (req, res) => {
 
 app.get('/favorites', (req, res) => {
   const user = req.session['user_id'];
-  getFavouritesById(user).then(results => {
+  getFavouritesByUserName(user).then(favourites => {
     const templateVars = {
-      results,
+      favourites,
       user
     }
+    console.log(templateVars);
     res.render('favorites', templateVars);
   })
+})
+
+app.get('/favorites-ajax', (req, res) => {
+  const user = req.session['user_id'];
+  getFavouritesByUserName(user).then(favourites => {
+    const templateVars = {
+      favourites,
+      user
+    }
+    console.log(templateVars);
+    res.status(200).json(templateVars);
+  })
+})
+
+app.post('/delete-favourites', (req, res) => {
+  console.log(req.body.user_id, req.body.map_id);
+  const inputObj = { user_id: Number(req.body.user_id), map_id: Number(req.body.map_id) };
+  deleteFavourites(inputObj);
+  res.render('/favorites');
 })
 
 app.get('/profile', (req, res) => {
@@ -176,14 +198,16 @@ app.get('/profile', (req, res) => {
   res.render('profile');
 });
 
-
-
 app.post("/favourite", (req, res) => {
   console.log(req.body.user_name, req.body.map_id);
-  getIdByUserName('hoopengsun').then(result => {
-    console.log(result);
+  getIdByUserName(req.body.user_name).then(result => {
+    const inputObj = { user_id: result[0].id, map_id: Number(req.body.map_id)};
+    console.log(inputObj);
+    newLike(inputObj);
   })
 })
+
+
 
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);
