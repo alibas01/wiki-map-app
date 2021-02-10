@@ -155,25 +155,28 @@ app.post("/register", (req, res) => {
   let email = req.body.email;
   let password = bcrypt.hashSync(req.body.pass, salt);
   let isRegistered = true;
-  isRegisteredBefore(user).then(data => {if(!data){isRegistered = false}})///
-  if (user !== "" && req.body.pass !== "") {
-    if (!isRegistered) {
-      let newUser = {user, email, password};
-      newUser(newUser);
-      req.session['user_id'] = user;
-      res.redirect("/");
+  isRegisteredBefore(user).then(data => {
+    if(!data){
+    isRegistered = false;
+    }
+    if (user !== "" && req.body.pass !== "") {
+      if (!isRegistered) {
+        let newU = {username: user, email, password};
+        newUser(newU);
+        req.session['user_id'] = user;
+        res.redirect("/");
+      } else {
+        res.status(400);
+        let error_message = `<h1>Error:400</h1> <h2><b>This user(${user}) registered before!!!</h2><h3><a href="/register">Register</a></h3></b>\n`;
+        templateVars ={ error_message }
+        res.render("error", templateVars);
+      }
     } else {
       res.status(400);
-      let error_message = `<h1>Error:400</h1> <h2><b>This email(${user}) registered before!!!</h2><h3><a href="/register">Register</a></h3></b>`;
-      templateVars ={ error_message }
-      res.render("error", templateVars);
-    }
-  } else {
-    res.status(400);
-    let error_message = `<h1>Error:400</h1> <h2><b>Email or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></b>`;
-      templateVars ={ error_message }
-      res.render("error", templateVars);
-  }
+      let error_message = `<h1>Error:400</h1> <h2><b>Email or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></b>\n`;
+        templateVars ={ error_message }
+        res.render("error", templateVars);
+  }})
 });
 
 
@@ -192,23 +195,35 @@ app.get("/login", (req, res) => {
 app.post("/login", (req, res) => {
   let user = req.body.user;
   let password = req.body.pass;
-  if (isRegisteredBefore(users, email)) {
-    if (isPasswordMatch(users, email, password)) {
-      req.session['user_id'] = findId(users, email);
-      res.redirect(`/urls`);
+  let isRegistered = false;
+  isRegisteredBefore(user).then(data => {
+    if(data){
+    isRegistered = true;
+    }
+    if (isRegistered) {
+      getPassword(user).then( pass => {
+        if (bcrypt.compareSync(password, pass)) {
+          let newU = {username: user, password};
+          newUser(newU);
+          req.session['user_id'] = user;
+          res.redirect("/");
+        } else {
+          res.status(403);
+          let error_message = `<h1>Error:403</h1> <h2><b>Please check your password!!!</h2><h3><a href="/login">Login</a></h3></b>\n`;
+          templateVars ={ error_message }
+          res.render("error", templateVars);
+        }})
     } else {
       res.status(403);
-      res.send(`<html><body><h1>Error:403</h1> <h2><b>Please check your password!!!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
-    }
-  } else {
-    res.status(403);
-    res.send(`<html><body><h1>Error:403</h1> <h2><b>This email(${email}) is not registered!!!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
-  }
+      let error_message = `<h1>Error:403</h1> <h2><b>This email(${user}) is not registered!!!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b>\n`;
+        templateVars ={ error_message }
+        res.render("error", templateVars);
+  }})
 });
 
 // GET /logout
 app.get("/logout", (req, res) => {
-  //req.session['user_id'] = null;
+  req.session['user_id'] = null;
   res.redirect(`/`);
 });
 
