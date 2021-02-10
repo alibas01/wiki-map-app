@@ -178,39 +178,39 @@ app.post("/register", (req, res) => {
 
 
 // GET /login
-// app.get("/login", (req, res) => {
-//   const user = users[req.session['user_id']];
-//   const templateVars = { user: user };
-//   if (!user) {
-//     res.render("login", templateVars);
-//   } else {
-//     res.redirect(`/`);
-//   }
-// });
+app.get("/login", (req, res) => {
+  const user = req.session['user_id'];
+  const templateVars = { user: user };
+  if (!user) {
+    res.render("login", templateVars);
+  } else {
+    res.redirect(`/`);
+  }
+});
 
 // POST /login
-// app.post("/login", (req, res) => {
-//   let email = req.body.email;
-//   let password = req.body.password;
-//   if (isRegisteredBefore(users, email)) {
-//     if (isPasswordMatch(users, email, password)) {
-//       req.session['user_id'] = findId(users, email);
-//       res.redirect(`/urls`);
-//     } else {
-//       res.status(403);
-//       res.send(`<html><body><h1>Error:403</h1> <h2><b>Please check your password!!!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
-//     }
-//   } else {
-//     res.status(403);
-//     res.send(`<html><body><h1>Error:403</h1> <h2><b>This email(${email}) is not registered!!!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
-//   }
-// });
+app.post("/login", (req, res) => {
+  let user = req.body.user;
+  let password = req.body.pass;
+  if (isRegisteredBefore(users, email)) {
+    if (isPasswordMatch(users, email, password)) {
+      req.session['user_id'] = findId(users, email);
+      res.redirect(`/urls`);
+    } else {
+      res.status(403);
+      res.send(`<html><body><h1>Error:403</h1> <h2><b>Please check your password!!!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
+    }
+  } else {
+    res.status(403);
+    res.send(`<html><body><h1>Error:403</h1> <h2><b>This email(${email}) is not registered!!!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
+  }
+});
 
 // GET /logout
-// app.get("/logout", (req, res) => {
-//   req.session['user_id'] = null;
-//   res.redirect(`/`);
-// });
+app.get("/logout", (req, res) => {
+  //req.session['user_id'] = null;
+  res.redirect(`/`);
+});
 
 
 app.listen(PORT, () => {
