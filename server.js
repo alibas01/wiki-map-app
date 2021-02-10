@@ -38,6 +38,7 @@ const isRegisteredBefore = db_helpers.isRegisteredBefore;
 const getAllMaps = db_helpers.getAllMaps;
 const getFavouritesById = db_helpers.getFavouritesById;
 const search = db_helpers.search;
+const getIdByUserName = db_helpers.getIdByUserName;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -84,6 +85,7 @@ app.get("/", (req, res) => {
   getAllMaps().then(rows => {
     const user = req.session['user_id'];
     const templateVars = { maps: rows, user };
+    console.log(templateVars);
     res.render('index', templateVars);
   })
   .catch(err => res.status(500).send(err.stack));
@@ -163,11 +165,10 @@ app.get('/favorites', (req, res) => {
   const user = req.session['user_id'];
   getFavouritesById(user).then(results => {
     const templateVars = {
-      favourites: {map_id: 1, user_id: 4, map_id: 1, user_id: 4, map_id: 1, user_id: 4,map_id: 1, user_id: 4},
+      results,
       user
     }
-    // res.render('favorites', templateVars);
-    res.status(200).json(templateVars);
+    res.render('favorites', templateVars);
   })
 })
 
@@ -269,8 +270,11 @@ app.get("/logout", (req, res) => {
 
 app.post("/favourite", (req, res) => {
   console.log(req.body.user_name, req.body.map_id);
+  getIdByUserName('hoopengsun').then(result => {
+    console.log(result);
+  })
 })
 
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);
-  });
+});
