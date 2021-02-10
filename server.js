@@ -92,12 +92,11 @@ app.get("/", (req, res) => {
 });
 
 app.get("/index_map", (req, res) => {
-  getAllMaps().then(rows => {
-    const user = req.session['user_id'];
+  const user = req.session['user_id'];
+    getAllMaps(user).then(rows => {
     const templateVars = { maps: rows, user };
     res.status(200).json(templateVars);
-  })
-  .catch(err => res.status(500).send(err.stack));
+  }).catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/points', (req, res) => {
@@ -176,6 +175,7 @@ app.get('/favorites', (req, res) => {
 app.get('/favorites-ajax', (req, res) => {
   const user = req.session['user_id'];
   getFavouritesByUserName(user).then(favourites => {
+    console.log(favourites);
     const templateVars = {
       favourites,
       user
@@ -204,6 +204,7 @@ app.post("/favourite", (req, res) => {
     const inputObj = { user_id: result[0].id, map_id: Number(req.body.map_id)};
     console.log(inputObj);
     newLike(inputObj);
+    res.render('/');
   })
 })
 
