@@ -24,7 +24,7 @@
 
     function initMap(){
       const options = {
-        zoom: 8,
+        zoom: 10,
         center: positionCurrentObjCenter
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
@@ -48,7 +48,7 @@
 
         marker.addListener('click', function(){
           infoWindow.open(map, marker);
-          map.setZoom(10);
+          map.setZoom(12);
           map.setCenter(marker.getPosition());
           document.getElementById("title").innerHTML = obj.title;
           const currentPosition = obj.coords.lat + ' ' + obj.coords.lng

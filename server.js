@@ -31,6 +31,8 @@ const newPoint = db_helpers.newPoint;
 const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
+const getFavouritesById = db_helpers.getFavouritesById;
+const search = db_helpers.search;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -67,7 +69,7 @@ app.use("/api/widgets", widgetsRoutes(db));
 app.use('/public', express.static('public'));
 
 app.get("/", (req, res) => {
-  let map_id = 2;
+  let map_id = 9;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
     const templateVars = { locations: locations };
@@ -77,7 +79,7 @@ app.get("/", (req, res) => {
 });
 
 app.get('/points', (req, res) => {
-  let map_id = 2;
+  let map_id = 9;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
     const templateVars = { greeting: 'welcome',locations: locations };
@@ -104,7 +106,7 @@ app.post('/new', (req, res) => {
 
 //see specific details
 app.get('/detail/:id', (req, res) => {
-  let map_id = 2;
+  let map_id = 9;
   getAllLocations(map_id).then(result => {
     const locations = result;
     const id_current = req.params.id;
@@ -119,6 +121,25 @@ app.get('/detail/:id', (req, res) => {
 app.get('/search', (req, res) => {
   res.render('search');
 })
+
+app.post('/search', (req, res) => {
+  const city = req.body.city;
+  const description = req.body.description;
+  console.log(city, description);
+  res.redirect('/points');
+})
+
+app.get('/favorites', (req, res) => {
+  let user_id = 1;
+  getFavouritesById(user_id).then(results => {
+    console.log(results);
+    const templateVars = {
+      favourites: results
+    }
+    res.render('favorites', templateVars);
+  })
+})
+
 app.get('/profile', (req, res) => {
   //get current user profile
   res.render('profile');
@@ -197,5 +218,4 @@ app.get('/profile', (req, res) => {
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);
   });
-
 
