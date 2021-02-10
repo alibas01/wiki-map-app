@@ -121,40 +121,39 @@ body {
   .new-map-box {
     z-index: 1;
     position: absolute;
+    margin: auto auto;
 
-    top: 50%;
-    left: 50%;
-    transform: translate(0, -50%);
-    transform: translate(-50%, 0);
     background-color: #FFF;
     padding: 1em;
     border-radius: 25px;
     box-shadow: 2px 2px 5px black;
-
-    .transparent-title {
-      color: black;
-      font-size: 100;
-
-    }
   }
 }
 
 .controls.zoom-control {
   display: flex;
   flex-direction: column;
-  border: 0;
-  margin: 1em;
-  font: 0.85em Arial;;
+  margin: 0.7em;
+  font: 1.5rem Arial;
+  border-radius: 10px;
+  box-shadow: 1px 1px 5px;
+
 
   .zoom-control-in {
+    border: none;
+    border-bottom: 1px solid $color3;
+    border-radius: 10px 10px 0 0;
     background-color: $color4;
-    padding: 1em;
+    padding: 0.1em 0.3em;
     margin: 0;
   }
 
   .zoom-control-out {
+    border: none;
+    border-radius: 0 0 10px 10px;
+    // box-shadow: 1px 1px 5px;
     background-color: $color4;
-    padding: 1em;
+    padding: 0.1em 0.3em;
     margin: 0;
   }
 }

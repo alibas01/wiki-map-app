@@ -12,11 +12,7 @@
       initZoomControl(map);
 
         // Create the initial InfoWindow.
-      let infoWindow = new google.maps.InfoWindow({
-        // content: "Click the map to get Lat/Lng!",
-        // position: myLatlng,
-      });
-      // const marker;
+      let infoWindow = new google.maps.InfoWindow({});
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -37,6 +33,7 @@
         );
       }
 
+      //manually enable zoom controls
       function initZoomControl(map) {
         document.querySelector(".zoom-control-in").onclick = function () {
           map.setZoom(map.getZoom() + 1);
