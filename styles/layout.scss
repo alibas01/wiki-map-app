@@ -47,7 +47,6 @@ body {
       width: 50%;
     }
     button:hover {
-      // btn-outline-primary
       background-color: $color4;
     }
   }
@@ -118,10 +117,57 @@ body {
     left: 50%;
     top: 32vh;
   }
+
+  .new-map-box {
+    z-index: 1;
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(0, -50%);
+    transform: translate(-50%, 0);
+    background-color: #FFF;
+    padding: 1em;
+    border-radius: 25px;
+    box-shadow: 2px 2px 5px black;
+
+    .transparent-title {
+      color: black;
+      font-size: 100;
+
+    }
+  }
+}
+
+.controls.zoom-control {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  margin: 1em;
+  font: 0.85em Arial;;
+
+  .zoom-control-in {
+    background-color: $color4;
+    padding: 1em;
+    margin: 0;
+  }
+
+  .zoom-control-out {
+    background-color: $color4;
+    padding: 1em;
+    margin: 0;
+  }
 }
 
 header {
   nav {
     background-color: $color1;
+
+    #dropdownMenuButton {
+      border: none;
+      background-color: transparent;
+      color: #007bff;
+      padding: 0;
+    }
   }
 }

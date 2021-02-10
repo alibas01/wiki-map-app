@@ -13,13 +13,20 @@
       });
     </script>
 
-    <title>map test</title>
+    <title>Create New Map - MAP APP</title>
   </head>
   <body>
     <%- include('partials/_nav') %>
     <%- include('partials/_click') %>
-    <h1>Create your own map</h1>
+    <div class="new-map-box">
+      <h1 class="transparent-title">Click Anywhere!</h1>
+    </div>
     <div id="map"></div>
-
+    <div style="display: none">
+      <div class="controls zoom-control">
+        <button class="zoom-control-in" title="Zoom In">+</button>
+        <button class="zoom-control-out" title="Zoom Out">−</button>
+      </div>
+    </div>
   </body>
 </html>
