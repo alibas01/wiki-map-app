@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('partials/_includes') %>
+  <title>My Points</title>
+</head>
+<body>
+  <%- include('partials/_nav') %>
+
+  <h3>My Points</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Id</th>
+        <th scope="col">Title</th>
+        <th scope="col">Position(lat)</th>
+        <th scope="col">Position(lng)</th>
+        <th scope="col">Description</th>
+        <th scope="col">Detail</th>
+      </tr>
+    </thead>
+    <% for(const location of locations) { %>
+      <tr>
+        <td><%= location['map_id'] %></td>
+        <td><%= location['name'] %></td>
+        <td><%= location['lat'] %></td>
+        <td><%= location['long'] %></td>
+        <td><%= location['description'] %></td>
+        <form method="GET" action="/detail/<%= location['map_id'] %>">
+          <td><button type="submit" class="btn btn-outline-primary">Details</button></td>
+        </form>
+      </tr>
+    <% } %>
+  </table>
+
+</body>
+</html>
