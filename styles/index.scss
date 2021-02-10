@@ -1,9 +1,10 @@
 @import "./partials/palette";
 @import "./partials/mixins";
 
-.container{
+.recommandation-content{
   display: flex;
   flex-wrap: wrap;
+  margin: 0px;;
 }
 
 .carousel-item {
