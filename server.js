@@ -89,6 +89,15 @@ app.get("/", (req, res) => {
   .catch(err => res.status(500).send(err.stack));
 });
 
+app.get("/index_map", (req, res) => {
+  getAllMaps().then(rows => {
+    const user = req.session['user_id'];
+    const templateVars = { maps: rows, user };
+    res.status(200).json(templateVars);
+  })
+  .catch(err => res.status(500).send(err.stack));
+});
+
 app.get('/points', (req, res) => {
   let map_id = 4;
   getAllLocations(map_id).then(rows => {
@@ -154,10 +163,11 @@ app.get('/favorites', (req, res) => {
   const user = req.session['user_id'];
   getFavouritesById(user).then(results => {
     const templateVars = {
-      favourites: results,
-      user,
+      favourites: {map_id: 1, user_id: 4, map_id: 1, user_id: 4, map_id: 1, user_id: 4,map_id: 1, user_id: 4},
+      user
     }
-    res.render('favorites', templateVars);
+    // res.render('favorites', templateVars);
+    res.status(200).json(templateVars);
   })
 })
 
@@ -257,6 +267,9 @@ app.get("/logout", (req, res) => {
   res.redirect(`/`);
 });
 
+app.post("/favourite", (req, res) => {
+  console.log(req.body.user_name, req.body.map_id);
+})
 
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);
