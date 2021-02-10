@@ -94,12 +94,12 @@ app.get('/points', (req, res) => {
   .catch(err => res.status(500).send(err.stack));
 });
 
-app.get('/new', (req, res) => {
+app.get('/new-map', (req, res) => {
   res.render('new');
 });
 
 app.post('/new', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position)
+  const currentPosition = JSON.parse(req.body.position);
   const newMap = {
     id: data.length,
     lat: currentPosition['lat'],
