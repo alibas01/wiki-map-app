@@ -12,18 +12,24 @@
   <div id="map"></div>
 
   <!-- DETAILS -->
+  <h4>Details</h4>
   <div id="current-position">
-    <h4>Details</h4>
     <h5>Title:</h5>
-    <p id="title" name="title"><%= title %></p>
-    <h5>Position:</h5>
-    <p id="position" name="position"><%= lat %> <%= long %></p>
-    <h5>Description:</h5>
-    <p id="description" name="description"><%= description %></p>
+    <p id="title"><%= locations[id_current]['name']%></p>
+    <p id="description"><%= locations[id_current]['description']%></p>
+    <h5 hidden id="current"><%= id_current %></h5>
+    <h5 hidden id="total"><%= locations.length %></h5>
+    <% for(let i = 0; i < locations.length; i++) { %>
+      <p hidden id="title<%= i %>" name="title"><%= locations[i]['name'] %></p>
+      <h5 hidden>Position:</h5>
+      <p hidden id="position<%= i %>" name="position"><%= locations[i]['lat'] %> <%= locations[i]['long'] %></p>
+      <h5 hidden >Description:</h5>
+      <p hidden id="description<%= i %>" name="description"><%=locations[i]['description']%></p>
   </div>
-  <form method="GET" action="/">
-    <button type="submit" class="btn btn-outline-primary">Home</button>
-  </form>
+  <% } %>
+    <form method="GET" action="/">
+      <button type="submit" class="btn btn-outline-primary">Home</button>
+    </form>
   <%- include('partials/_map') %>
 </body>
 </html>
