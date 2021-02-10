@@ -3,17 +3,20 @@
     function initMap(){
       const myLatlng = { lat: 43.6532, lng: -79.3832 };
       const options ={
-        zoom: 8,
-        center: myLatlng
+        zoom: 10,
+        center: myLatlng,
+        disableDefaultUI: true
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
-      const icon = "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png";
+      const image = "imgs/map-pin.png";
+      initZoomControl(map);
 
         // Create the initial InfoWindow.
       let infoWindow = new google.maps.InfoWindow({
-        content: "Click the map to get Lat/Lng!",
-        position: myLatlng,
+        // content: "Click the map to get Lat/Lng!",
+        // position: myLatlng,
       });
+      // const marker;
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -26,7 +29,7 @@
             infoWindow.setContent("Current Location");
             infoWindow.open(map);
             map.setCenter(pos);
-            document.getElementById("position").innerHTML = JSON.stringify(pos);
+            // document.getElementById("position").innerHTML = JSON.stringify(pos);
           },
           () => {
             handleLocationError(true, infoWindow, map.getCenter());
@@ -34,18 +37,79 @@
         );
       }
 
+      function initZoomControl(map) {
+        document.querySelector(".zoom-control-in").onclick = function () {
+          map.setZoom(map.getZoom() + 1);
+        };
+        document.querySelector(".zoom-control-out").onclick = function () {
+          map.setZoom(map.getZoom() - 1);
+        };
+        map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(
+          document.querySelector(".zoom-control")
+        );
+      }
+
+
       infoWindow.open(map);
       // Configure the click listener.
       map.addListener("click", (mapsMouseEvent) => {
+        $('.new-map-box').css('display', 'none');
+
         // Close the current InfoWindow.
         infoWindow.close();
-        // Create a new InfoWindow.
+        // infoWindow = new google.maps.InfoWindow({
+        //   position: mapsMouseEvent.latLng,
+        // });
+
+        const infoContent =
+        `<form class="form-inline" action="/new-map" method="POST">` +
+          `<div id="current-position">` +
+            `<h4>New Point:</h4>` +
+            `<div class="flex-row">` +
+              `<label for="position">Position:</label>` +
+              `<input id="positionImport" type="text" name="position" placeholder="position">` +
+            `</div><br>` +
+            `<div class="flex-row">` +
+              `<label for="title">Title:</label>` +
+              `<input type="text" name="title" placeholder="title">` +
+            `</div><br>` +
+            `<div class="flex-row">` +
+              `<label for="category">Category:</label>` +
+              `<select name="category" id="category">` +
+                `<option value="drinking">drinking</option>` +
+                `<option value="restaurants">restaurants</option>` +
+                `<option value="art galleries">art galleries</option>` +
+                `<option value="historic places">historic places</option>` +
+                `<option value="parks">parks</option>` +
+                `<option value="shopping malls">shopping malls</option>` +
+              `</select>` +
+            `</div><br>` +
+              `<div class="flex-column">` +
+                `<textarea name="description" type="text" placeholder="description"></textarea><br>` +
+                `<button type="submit" class="btn">Save</button>` +
+              `</div>` +
+            `</div>` +
+          `</form>`;
+
+        // Create a new InfoWindow each time there is a click
         infoWindow = new google.maps.InfoWindow({
+          content: infoContent,
           position: mapsMouseEvent.latLng,
+          pixelOffset: new google.maps.Size(0, -75)
         });
-        document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-        infoWindow.setContent("Select this location!");
+
+        const marker = new google.maps.Marker({
+          position: mapsMouseEvent.latLng,
+          map,
+          icon: {url: image, scaledSize: new google.maps.Size(50, 50)}
+        });
+
+
+        // document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
+        //infoWindow.setContent("Select this location!");
+        // infoWindow.setContent({content: infoContent});
         map.setZoom(12);
+        // map.setCenter({lat: marker.position.lat(), lng: marker.position.lng()});
         infoWindow.open(map);
       });
     }

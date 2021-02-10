@@ -50,10 +50,11 @@
           infoWindow.open(map, marker);
           map.setZoom(12);
           map.setCenter(marker.getPosition());
+
+          const currentPosition = obj.coords.lat + ' ' + obj.coords.lng;
+
           document.getElementById("title").innerHTML = obj.title;
-          const currentPosition = obj.coords.lat + ' ' + obj.coords.lng
-          // document.getElementById("position").innerHTML = currentPosition;
-          // console.log(obj.description);
+          document.getElementById("position").value = currentPosition;
           document.getElementById("description").innerHTML = obj.description;
         });
       }

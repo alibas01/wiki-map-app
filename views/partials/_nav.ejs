@@ -14,14 +14,33 @@
         <li class="nav-item">
           <a class="nav-item nav-link" href="/points">My Points</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" href="/new">Create New Map</a>
+        <li class="nav-item dropdown">
+          <button class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Maps
+          </button>
+          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="/new-map">New Map</a>
+            <a class="dropdown-item" href="/detail">Edit Map</a>
+          </div>
+          <!-- <a class="nav-item nav-link" href="/new-map">Create New Map</a> -->
         </li>
       </ul>
 
 
 
-      <!-- vvv ADD LOGIC vvv -->
+      <!-- vvv ADD APPROPRIATE VAR NAME vvv -->
+
+      <% if (true) {%>
+      <!-- SIGNED OUT -->
+      <div class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/login">Sign In</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-item nav-link" href="/register">Register</a>
+        </li>
+      </div>
+      <% } else { %>
 
       <!-- SIGNED IN -->
       <div class="navbar-nav">
@@ -32,16 +51,8 @@
           <a class="nav-item nav-link" href="/logout">Log Out</a>
         </li>
       </div>
+      <% } %>
 
-      <!-- SIGNED OUT -->
-      <div class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-item nav-link" href="/login">Sign In</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-item nav-link" href="/register">Register</a>
-        </li>
-      </div>
     </div>
   </nav>
 </header>

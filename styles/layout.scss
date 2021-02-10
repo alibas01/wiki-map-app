@@ -9,15 +9,46 @@ body {
   }
 
   #map{
-    height: 400px;
-    width: 100%;
+    position: fixed !important;
+    top: 56px;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
   #current-position{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 500px;
+    margin: 0 1.5em;
+
+
+    h4 {
+      display: flex;
+      justify-content: space-around;
+    }
+    .flex-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+    .flex-column {
+      display: flex;
+      flex-direction: column;
+    }
+    textarea {
+      resize: none;
+      margin: 0;
+    }
+    select {
+      margin: 0;
+    }
+    button {
+      background-color: transparent;
+      border: 1px solid $color3;
+      border-radius: 10px;
+      margin: 1em auto;
+      width: 50%;
+    }
+    button:hover {
+      background-color: $color4;
+    }
   }
   p{
     margin: 8px;
@@ -52,16 +83,15 @@ body {
 
   .form-layout {
     height: 75vh;
-    // display: flex;
-    // flex-direction: column;
     h1 {
       margin-right: 2em;
+      color: $color2;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      border-left: 2px solid black;
+      border-left: 2px solid $color1;
       padding-left: 2em;
 
       input {
@@ -69,10 +99,75 @@ body {
       }
     }
   }
+  .error-layout {
+    height: 75vh;
+
+    h1 {
+      margin: 0 2em;
+      color: $color2;
+    }
+    h2 {
+      margin: 0 2em;
+    }
+  }
+  .line {
+    border-left: 2px solid $color1;
+    height: 200px;
+    position: absolute;
+    left: 50%;
+    top: 32vh;
+  }
+
+  .new-map-box {
+    z-index: 1;
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+    transform: translate(0, -50%);
+    transform: translate(-50%, 0);
+    background-color: #FFF;
+    padding: 1em;
+    border-radius: 25px;
+    box-shadow: 2px 2px 5px black;
+
+    .transparent-title {
+      color: black;
+      font-size: 100;
+
+    }
+  }
+}
+
+.controls.zoom-control {
+  display: flex;
+  flex-direction: column;
+  border: 0;
+  margin: 1em;
+  font: 0.85em Arial;;
+
+  .zoom-control-in {
+    background-color: $color4;
+    padding: 1em;
+    margin: 0;
+  }
+
+  .zoom-control-out {
+    background-color: $color4;
+    padding: 1em;
+    margin: 0;
+  }
 }
 
 header {
   nav {
     background-color: $color1;
+
+    #dropdownMenuButton {
+      border: none;
+      background-color: transparent;
+      color: #007bff;
+      padding: 0;
+    }
   }
 }
