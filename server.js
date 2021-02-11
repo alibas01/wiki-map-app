@@ -106,21 +106,6 @@ app.get('/points', (req, res) => {
     .catch(err => res.status(500).send(err.stack));
 });
 
-
-//temporarily store points
-let points = [];
-
-app.post('/new-map/points', (req, res) => {
-  console.log('new-map/points post', req.body);
-  points.push(req.body);
-  res.send(points);
-});
-
-app.get('/new-map/points', (req, res) => {
-  console.log('new-map/points get', req.body);
-  res.send(points);
-});
-
 app.post('/points', (req, res) => {
   console.log('/points post', req.body);
   findUserIdByName(req.session['user_id']).then(userID => {
@@ -154,6 +139,36 @@ app.post('/points', (req, res) => {
   });
 
 });
+
+app.get('/edit', (req, res) => {
+  if (!req.session['user_id']) {
+
+    let error_message = `Please Register or Sign In to Edit Maps!`;
+    let code = 403;
+    const user = null;
+
+    const templateVars = { user, error_message, code};
+    res.render("error", templateVars);
+  } else {
+    //get and pass map id to
+    // getAllMaps(req.session['user_id']).then(userID => {
+    //   getMapIdbyUserId(userID).then(mapID => {
+    //     console.log('mapID', mapID);
+    //     // res.render('wow');
+    //     // res.status(200).send(mapID);
+    //     res.send({mapID});
+    //   })
+    //   .catch(err => {
+    //     console.log('there was an error:', err);
+    //   });
+    // });
+
+    const user = req.session['user_id']; // this should be on all get routes
+    const templateVars = { user:user };
+    res.render('edit', templateVars);
+  }
+});
+
 
 app.get('/new', (req, res) => {
   if (!req.session['user_id']) {
