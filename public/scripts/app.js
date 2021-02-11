@@ -28,10 +28,21 @@ $(document).ready(() => {
       //save data
       newMap['title'] = title.value;
       newMap['city'] = city.value;
-      newMap['visibility'] = visibility.value;
 
+      if (visibility.value === 'Public') {
+        newMap['visibility'] = true;
+      }
       //hide box and enable map
       $(".new-map-box").css('display', 'none');
+
+
+      $.ajax({
+        method: "POST",
+        url: "/new",
+        data: newMap
+      }).done((data) => {
+        console.log('Added map:', data);
+      });
     }
 
     console.log(newMap);

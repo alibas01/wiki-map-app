@@ -136,6 +136,8 @@
             }).done((res) => {
               console.log('response from server:',res);
               deleteMarkers(tempMarkerList);
+              deleteMarkers(markerList);
+
               for(let item of res) {
                 console.log(item);
                 const tempMarker = new google.maps.Marker({position: { lat: Number(item.lat), lng: Number(item.long) }, map: map, icon: {url: unsubmitted, scaledSize: new google.maps.Size(50, 50)}, draggable: true})

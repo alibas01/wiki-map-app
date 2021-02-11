@@ -107,8 +107,19 @@ app.get('/points', (req, res) => {
 });
 
 app.get('/new-map', (req, res) => {
+  console.log('first console log',req.session['user_id']);
+  if (!req.session['user_id']) {
+
+    let error_message = `Please Register to Create Maps!`;
+    let code = 403;
+    const user = null;
+
+    const templateVars = { user, error_message, code};
+    res.render("error", templateVars);
+  }
   const user = req.session['user_id']; // this should be on all get routes
-  res.render('new');
+  const templateVars = { user:user };
+  res.render('new', templateVars);
 });
 
 
@@ -127,15 +138,26 @@ app.get('/new-map/points', (req, res) => {
 });
 
 app.post('/new', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position);
-  const newMap = {
-    id: data.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${newMap.id}`);
+  // const currentPosition = JSON.parse(req.body.position);
+  // const user = req.session['user_id'];
+  console.log('/new route', req.body);
+
+  console.log('req session',req.session['user_id']);
+  //${inputObj.user_id}`, `${inputObj.title}`, `${inputObj.city}`, `${inputObj.last_updated_at}`, `${inputObj.isPublic}
+
+  findUserIdByName(req.session['user_id']).then(res => {
+    const newMapObj = {
+      user_id: res,
+      title: req.body.title,
+      city: req.body.city,
+      // last_updated_at: Date.now(),
+      isPublic: req.body.visibility
+    };
+    newMap(newMapObj);
+    console.log(newMapObj);
+  });
+  // getMapIdbyUserId(req.session['user_id']);
+  //res.redirect(`/detail/${newMap.id}`);
 });
 
 //see specific details
