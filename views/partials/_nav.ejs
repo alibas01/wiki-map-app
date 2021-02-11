@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse justify-content-between" id="navbarNavAltMarkup">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
-          <a class="nav-item nav-link" href="/detail">My Maps</a>
+          <a class="nav-item nav-link" href="/favorites">My Favoriates</a>
         </li>
         <li class="nav-item">
           <a class="nav-item nav-link" href="/points">My Points</a>
@@ -44,7 +44,7 @@
       <% } else { %>
 
       <!-- SIGNED IN -->
-      <div> Logged in: <%= user %> </div>
+      <div id="current_user"> Logged in: <%= user %> </div>
       <div class="navbar-nav">
 
         <li class="nav-item">

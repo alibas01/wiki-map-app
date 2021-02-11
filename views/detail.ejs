@@ -15,7 +15,13 @@
   <h4>Details</h4>
   <div id="current-position">
     <h5>Title:</h5>
+    <% for(let i = 0; i < locations.length; i++) { %>
+      <% if(id_current == locations[i]['id']) {%>
+        <% id_current = i %>
+      <% } %>
+    <% } %>
     <p id="title"><%= locations[id_current]['name']%></p>
+    <p id="title"><%= locations[id_current]['lat']%><%= locations[id_current]['long']%></p>
     <p id="description"><%= locations[id_current]['description']%></p>
     <h5 hidden id="current"><%= id_current %></h5>
     <h5 hidden id="total"><%= locations.length %></h5>

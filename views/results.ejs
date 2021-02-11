@@ -7,11 +7,12 @@
 <body>
   <%- include('partials/_nav') %>
 
-  <h3>My Points</h3>
+  <h3 id="result">results</h3>
   <table class="table">
     <thead>
       <tr>
         <th scope="col">Location Id</th>
+        <th scope="col">Map Id</th>
         <th scope="col">Title</th>
         <th hidden scope="col">Position(lat)</th>
         <th hidden scope="col">Position(lng)</th>
@@ -22,6 +23,7 @@
     <% for(const location of locations) { %>
       <tr>
         <td><%= location['id'] %></td>
+        <td><%= location['map_id'] %></td>
         <td><%= location['name'] %></td>
         <td hidden><%= location['lat'] %></td>
         <td hidden><%= location['long'] %></td>

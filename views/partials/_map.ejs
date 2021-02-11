@@ -10,7 +10,7 @@
     let positionCurrentObjCenter = {lat: Number(positionCurrentObj[0]), lng: Number(positionCurrentObj[1])};
 
     const total = document.getElementById("total").innerHTML;
-    for (let i = 1; i <= total; i++){
+    for (let i = 0; i < total; i++){
       let title = "title" + i;
       let position = "position" + i;
       let description = "description" + i;
@@ -23,7 +23,7 @@
     }
 
     function initMap(){
-      const options ={
+      const options = {
         zoom: 10,
         center: positionCurrentObjCenter
       };
@@ -48,7 +48,7 @@
 
         marker.addListener('click', function(){
           infoWindow.open(map, marker);
-          map.setZoom(10);
+          map.setZoom(12);
           map.setCenter(marker.getPosition());
 
           const currentPosition = obj.coords.lat + ' ' + obj.coords.lng;

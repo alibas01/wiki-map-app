@@ -50,11 +50,14 @@
               <td><%= password %></td>
               <td>
                 <form action="/profile" method="POST">
-                  <input type="password" name="pass" placeholder="New Password">
-                  <button type="submit">Update</button>
+                  <label class="pass" for="password-text">Please Enter Current Password!</label>
+                  <input id='old_pass_id' type="password" name="old_pass" placeholder="Old Password">
+                  <input id='password-input' type="password" name="pass" placeholder="New Password">
+                  <button id='pass-button' type="submit">Update Password</button>
                 </form>
               </td>
             </tr>
+
 
           <% } %>
       </tbody>
