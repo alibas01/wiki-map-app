@@ -1,5 +1,5 @@
 $(() => {
-  const load = function(){
+  const load = function() {
     $('#favourites').empty();
     $.ajax({url: '/favorites-ajax', type: 'GET'}).done((result)=> {
       for (let favourite of result.favourites) {
@@ -17,20 +17,20 @@ $(() => {
             </div>
           </div>
         </div>
-        `
+        `;
         $('#favourites').append(favouriteItem);
         const $button = $(`#delete-${favourite['map_id']}`);
-        $button.on('click', function (event) {
+        $button.on('click', function(event) {
           event.preventDefault();
           console.log('Button clicked, performing ajax call...');
           const data = {user_id: favourite['user_id'], map_id: favourite['map_id']};
           console.log(data);
-          $.ajax({url: '/delete-favourites', type: 'POST', data: data}).always(function(){
+          $.ajax({url: '/delete-favourites', type: 'POST', data: data}).always(function() {
             load();
           });
         });
       }
     });
-  }
+  };
   load();
 });
