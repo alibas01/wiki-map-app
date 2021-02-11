@@ -100,11 +100,11 @@ app.get("/index_map", (req, res) => {
 });
 
 app.get('/points', (req, res) => {
-  let map_id = 4;
-  getAllLocations(map_id).then(rows => {
-    const user = req.session['user_id'];
+  const user = req.session['user_id'];
+  getAllLocations(user).then(rows => {
     const locations = rows;
-    const templateVars = { greeting: 'welcome',locations: locations, map_id, user };
+    console.log(locations)
+    const templateVars = { greeting: 'welcome',locations: locations, user };
     res.render('points', templateVars);
   })
   .catch(err => res.status(500).send(err.stack));

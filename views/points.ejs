@@ -26,7 +26,7 @@
         <td hidden><%= location['lat'] %></td>
         <td hidden><%= location['long'] %></td>
         <td><%= location['description'] %></td>
-        <form method="GET" action="/detail/<%= map_id %>/<%= location['id'] %>">
+        <form method="GET" action="/detail/<%= location['map_id'] %>/<%= location['id'] %>">
           <td><button type="submit" class="btn btn-outline-primary">Details</button></td>
         </form>
       </tr>
