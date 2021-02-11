@@ -60,12 +60,8 @@
         //show menu
         $('.collapse').collapse("show");
 
-        // document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-        //infoWindow.setContent("Select this location!");
-        // infoWindow.setContent({content: infoContent});
-        map.setZoom(12);
-        // map.setCenter({lat: marker.position.lat(), lng: marker.position.lng()});
-
+        map.setZoom(13);
+        map.panTo({ lat: mapsMouseEvent.latLng.toJSON().lat, lng: mapsMouseEvent.latLng.toJSON().lng })
       });
 
       let markerCount = 0;
@@ -82,16 +78,13 @@
         })
         tempMarkerList.push(tempMarker);
 
-        // tempMarker.on(plugin.google.maps.event.MARKER_DRAG_START, onMarkerDrag);
+        //add drag event listener. update lat/lng
         google.maps.event.addListener(tempMarker, 'drag', function(ev) {
           $('#point-lat').text(ev.latLng.toJSON().lat);
           $('#point-long').text(ev.latLng.toJSON().lng);
         });
-        // google.maps.event.onMarkerDrag(tempMarker);
-        // , function() {
-        //   console.log('marker drag');
-        // });
 
+        //add click event listener. update lat/lng
         google.maps.event.addListener(tempMarker, 'click', function() {
           console.log('marker clicked');
           $('#point-lat').text(tempMarker.position.toJSON().lat);
@@ -105,45 +98,16 @@
           //show menu
           $('.collapse').collapse("show");
         });
-
-
-        // re-add listeners
-        // for (let i = 0; i < markerList.length; i++) {
-        //   const customMarker = new google.maps.Marker({
-        //     position: markerList[i].position,
-        //     map: map,
-        //     icon: {url: submitted, scaledSize: new google.maps.Size(50, 50)},
-        //     draggable: true
-        //   });
-        //   google.maps.event.addListener(customMarker, 'click', function() {
-        //     console.log('marker clicked');
-        //     $('#point-lat').text(customMarker.position.toJSON().lat);
-        //     $('#point-long').text(customMarker.position.toJSON().lng);
-
-        //     //show menu
-        //     $('.collapse').collapse("show");
-        //  });
-        // }
-
       }
 
       const pointForm = document.getElementById('new-point');
         google.maps.event.addDomListener(pointForm, "submit", () => {
-          // markerList.push(larker);
-
-          // console.log('added marker. markerList:', markerList);
-          // console.log('added marker. marker:', marker.position.toJSON());
-          // window.alert("Point was posted");
-
-
           //fetch field data
           const title =       $('#point-title')[0];
           const lat =         $('#point-lat')[0];
           const long =        $('#point-long')[0];
           const category =    $('#point-category')[0];
           const description = $('#point-desc')[0];
-
-          // console.log(lat, long);
 
           //error handling
           if (!title.value.length ||
@@ -223,7 +187,6 @@
         clearMarkers(list);
         list = [];
       }
-
     }
 
 
