@@ -10,7 +10,7 @@ $(() => {
               <strong class="d-inline-block mb-2 text-success">Map Id: ${favourite['map_id']}</strong>
               <h3 class="mb-0">${favourite['title']}</h3>
               <p class="card-text mb-auto">City: ${favourite['city']}</p>
-              <form method="GET" action="/detail/${favourite['id']}/1">
+              <form method="GET" action="/detail/${favourite['map_id']}/1">
                 <td><button type="submit" class="btn btn-outline-primary">All locations</button></td>
                 <td><button id="delete-${favourite['map_id']}" class="btn btn-outline-primary">Remove from favourites</button></td>
               </form>
