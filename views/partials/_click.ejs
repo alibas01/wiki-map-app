@@ -10,8 +10,8 @@
         disableDefaultUI: true
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
-      const image = "imgs/map-pin.png";
-      const imagePosted = "imgs/map-pin-ready.png";
+      const submitted = "imgs/map-pin-red.png";
+      const unsubmitted = "imgs/map-pin-black.png";
       initZoomControl(map);
 
 
@@ -51,7 +51,7 @@
       map.addListener("click", (mapsMouseEvent) => {
         $('#new-point').css('display', 'block');
 
-        addMarker(mapsMouseEvent.latLng, image);
+        addMarker(mapsMouseEvent.latLng, submitted);
 
         //set view with lat and long
         $('#point-lat').text(mapsMouseEvent.latLng.toJSON().lat);
@@ -70,16 +70,41 @@
 
       let markerCount = 0;
       // Adds a marker to the map and push to the array.
-      function addMarker(location, image) {
+      function addMarker(location, submitted) {
         console.log(++markerCount);
-        clearMarkers(markerList);
-        //marker.setMap(null);
-        tempMarkerList.push(new google.maps.Marker({
+        clearMarkers(tempMarkerList);
+
+        const tempMarker = new google.maps.Marker({
           position: location,
           map: map,
-          icon: {url: image, scaledSize: new google.maps.Size(50, 50)},
+          icon: {url: submitted, scaledSize: new google.maps.Size(50, 50)},
           draggable: true
-        }));
+        })
+        tempMarkerList.push(tempMarker);
+
+        // tempMarker.on(plugin.google.maps.event.MARKER_DRAG_START, onMarkerDrag);
+        google.maps.event.addListener(tempMarker, 'drag', function(ev) {
+          $('#point-lat').text(ev.latLng.toJSON().lat);
+          $('#point-long').text(ev.latLng.toJSON().lng);
+        });
+        // google.maps.event.onMarkerDrag(tempMarker);
+        // , function() {
+        //   console.log('marker drag');
+        // });
+
+        google.maps.event.addListener(tempMarker, 'click', function() {
+          console.log('marker clicked');
+          $('#point-lat').text(tempMarker.position.toJSON().lat);
+          $('#point-long').text(tempMarker.position.toJSON().lng);
+          $('#point-title')[0].value = '';
+          $('#point-category')[0].value = '';
+          $('#point-desc')[0].value = '';
+
+          map.panTo({ lat: tempMarker.position.toJSON().lat, lng: tempMarker.position.toJSON().lng })
+
+          //show menu
+          $('.collapse').collapse("show");
+        });
 
 
         // re-add listeners
@@ -87,7 +112,7 @@
         //   const customMarker = new google.maps.Marker({
         //     position: markerList[i].position,
         //     map: map,
-        //     icon: {url: image, scaledSize: new google.maps.Size(50, 50)},
+        //     icon: {url: submitted, scaledSize: new google.maps.Size(50, 50)},
         //     draggable: true
         //   });
         //   google.maps.event.addListener(customMarker, 'click', function() {
@@ -101,13 +126,6 @@
         // }
 
       }
-
-      // let larker = new google.maps.Marker({
-      //     position: location,
-      //     map: map,
-      //     icon: {url: image, scaledSize: new google.maps.Size(50, 50)},
-      //     draggable: true
-      //   });
 
       const pointForm = document.getElementById('new-point');
         google.maps.event.addDomListener(pointForm, "submit", () => {
@@ -156,10 +174,16 @@
               deleteMarkers(tempMarkerList);
               for(let item of res) {
                 console.log(item);
-                const tempMarker = new google.maps.Marker({position: { lat: Number(item.lat), lng: Number(item.long) }, map: map, icon: {url: imagePosted, scaledSize: new google.maps.Size(50, 50)}})
+                const tempMarker = new google.maps.Marker({position: { lat: Number(item.lat), lng: Number(item.long) }, map: map, icon: {url: unsubmitted, scaledSize: new google.maps.Size(50, 50)}, draggable: true})
                 markerList.push(tempMarker);
 
-               google.maps.event.addListener(tempMarker, 'click', function() {
+
+                google.maps.event.addListener(tempMarker, 'drag', function(ev) {
+                  $('#point-lat').text(ev.latLng.toJSON().lat);
+                  $('#point-long').text(ev.latLng.toJSON().lng);
+                });
+
+                google.maps.event.addListener(tempMarker, 'click', function() {
                   console.log('marker clicked');
                   $('#point-lat').text(tempMarker.position.toJSON().lat);
                   $('#point-long').text(tempMarker.position.toJSON().lng);
@@ -181,10 +205,10 @@
       // Sets the map on all markers in the array.
       const setMapOnAll = function(map, list) {
         console.log(list);
-        // for (let i = 0; i < list.length; i++) {
-        //   console.log('markerlist:', list);
-        //   list[i].setMap(map);
-        // }
+        for (let i = 0; i < list.length; i++) {
+          console.log('markerlist:', list);
+          list[i].setMap(map);
+        }
       }
 
       // Removes the markers from the map, but keeps them in the array.
