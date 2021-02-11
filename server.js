@@ -39,6 +39,7 @@ const getFavouritesByUserName = db_helpers.getFavouritesByUserName;
 const search = db_helpers.search;
 const getIdByUserName = db_helpers.getIdByUserName;
 const deleteFavourites = db_helpers.deleteFavourites;
+const getAllLocationsByMapId = db_helpers.getAllLocationsByMapId;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -130,7 +131,7 @@ app.post('/new', (req, res) => {
 //see specific details
 app.get('/detail/:map_id/:location_id', (req, res) => {
   let map_id = req.params.map_id || 4;
-  getAllLocations(map_id).then(result => {
+  getAllLocationsByMapId(map_id).then(result => {
     const user = req.session['user_id'];
     const locations = result;
     const id_current = req.params.location_id;
@@ -139,6 +140,7 @@ app.get('/detail/:map_id/:location_id', (req, res) => {
       id_current,
       user,
     };
+    console.log(templateVars);
     res.render('detail', templateVars);
   });
 });
@@ -189,7 +191,7 @@ app.post('/delete-favourites', (req, res) => {
   console.log(req.body.user_id, req.body.map_id);
   const inputObj = { user_id: Number(req.body.user_id), map_id: Number(req.body.map_id) };
   deleteFavourites(inputObj);
-  res.render('/favorites');
+  res.redirect('/favorites');
 })
 
 app.get('/profile', (req, res) => {
@@ -204,7 +206,7 @@ app.post("/favourite", (req, res) => {
     const inputObj = { user_id: result[0].id, map_id: Number(req.body.map_id)};
     console.log(inputObj);
     newLike(inputObj);
-    res.render('/');
+    res.redirect('/');
   })
 })
 
