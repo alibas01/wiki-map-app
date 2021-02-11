@@ -8,6 +8,57 @@
 
   <body>
     <%- include('partials/_nav') %>
-    <h1>User Profile</h1>
+    <main style="margin: 1em;">
+    <h1>User Profile</h1><div><img class="man-image" src="/../public/imgs/man.jpg"></div>
+    <% if (!user) { %>
+        <h3>Caution:</h3> <h4><b>Please login or register for the Profile info.</h4></b>
+        <% } else { %>
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">Record</th>
+                <th scope="col">Info</th>
+                <th scope="col">New Info</th>
+              </tr>
+            </thead>
+          <tbody>
+
+            <tr>
+              <td>USERNAME</td>
+              <td><%= username %></td>
+              <td>
+                <form action="/profile" method="POST">
+                  <input type="text" name="user" placeholder="New Username">
+                  <button type="submit">Update</button>
+                </form>
+              </td>
+            </tr>
+
+            <tr>
+              <td>EMAIL</td>
+              <td><%= email %></td>
+              <td>
+                <form action="/profile" method="POST">
+                  <input type="email" name="email" placeholder="New Email">
+                  <button type="submit">Update</button>
+                </form>
+              </td>
+            </tr>
+
+            <tr>
+              <td>PASSWORD</td>
+              <td><%= password %></td>
+              <td>
+                <form action="/profile" method="POST">
+                  <input type="password" name="pass" placeholder="New Password">
+                  <button type="submit">Update</button>
+                </form>
+              </td>
+            </tr>
+
+          <% } %>
+      </tbody>
+    </table>
+  </main>
   </body>
 </html>

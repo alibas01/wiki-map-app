@@ -22,7 +22,7 @@ module.exports = (db) => {
     }
   });
 
-  // // POST /register
+  // POST /register
   router.post("/", (req, res) => {
     let user = req.body.user;
     let email = req.body.email;
@@ -46,7 +46,7 @@ module.exports = (db) => {
         }
       } else {
         res.status(400);
-        let error_message = `<h1>Error:400</h1> <h2><b>Email or Password   cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></  b>\n`;
+        let error_message = `<h1>Error:400</h1> <h2><b>Username or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></  b>\n`;
           templateVars ={ error_message }
           res.render("error", templateVars);
     }})

@@ -62,6 +62,7 @@ const widgetsRoutes = require("./routes/widgets");
 const loginRoute = require("./routes/login");
 const logoutRoute = require("./routes/logout");
 const registerRoute = require("./routes/register");
+const profileRoute = require("./routes/profile");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
@@ -70,6 +71,7 @@ app.use("/api/widgets", widgetsRoutes(db));
 app.use("/login", loginRoute(db));
 app.use("/logout", logoutRoute(db));
 app.use("/register", registerRoute(db));
+app.use("/profile", profileRoute(db));
 
 // Note: mount other resources here, using the same pattern above
 
@@ -142,11 +144,7 @@ app.get('/detail/:id', (req, res) => {
   });
 });
 
-app.get('/profile', (req, res) => {
-  //get current user profile
-  const user = req.session['user_id']; // this should be on all get routes
-  res.render('profile');
-});
+
 
 
 

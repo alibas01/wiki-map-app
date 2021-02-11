@@ -46,7 +46,7 @@ module.exports = (db) => {
           }})
       } else {
         res.status(403);
-        let error_message = `<h1>Error:403</h1> <h2><b>This email(${user}) is   not registered!!!\n Please Register first!</h2><h3><a href="/  register">Register</a></h3></b>\n`;
+        let error_message = `<h1>Error:403</h1> <h2><b>This user(${user}) is   not registered!!!\n Please Register first!</h2><h3><a href="/  register">Register</a></h3></b>\n`;
           templateVars ={ error_message }
           res.render("error", templateVars);
     }})
