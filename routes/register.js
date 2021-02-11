@@ -22,16 +22,12 @@ module.exports = (db) => {
     }
   });
 
-  // // POST /register
+  // POST /register
   router.post("/", (req, res) => {
     let user = req.body.user;
     let email = req.body.email;
     let password = bcrypt.hashSync(req.body.pass, salt);
-    let isRegistered = true;
-    isRegisteredBefore(user).then(data => {
-      if(!data){
-      isRegistered = false;
-      }
+    isRegisteredBefore(user).then(isRegistered => {
       if (user !== "" && req.body.pass !== "") {
         if (!isRegistered) {
           let newU = {username: user, email, password};
@@ -39,15 +35,19 @@ module.exports = (db) => {
           req.session['user_id'] = user;
           res.redirect("/");
         } else {
-          res.status(400);
-          let error_message = `<h1>Error:400</h1> <h2><b>This user(${user})   registered before!!!</h2><h3><a href="/register">Register</a></h3></  b>\n`;
-          templateVars ={ error_message }
+          user = null;
+          res.status(404);
+          let error_message = `This username registered before! Please choose an available one!`;
+          let code = 404;
+          templateVars ={ user, error_message, code};
           res.render("error", templateVars);
         }
       } else {
-        res.status(400);
-        let error_message = `<h1>Error:400</h1> <h2><b>Email or Password   cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></  b>\n`;
-          templateVars ={ error_message }
+        user = null;
+          res.status(404);
+          let error_message = `Username or password cannot be empty!`;
+          let code = 404;
+          templateVars ={ user, error_message, code};
           res.render("error", templateVars);
     }})
   });
