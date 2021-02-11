@@ -23,6 +23,7 @@ db.query(`SELECT id FROM users`).then(data => console.log(data.rows));
 
 // Helper functions
 const db_helpers = require('./lib/db_helpers')(db);
+const getPassword = db_helpers.getPassword;
 const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
 const getMapsbyId = db_helpers.getMapsbyId;
 const getUsers = db_helpers.getUsers;
@@ -32,7 +33,6 @@ const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
 const findUserIdByName = db_helpers.findUserIdByName;
-const getPassword = db_helpers.getPassword;
 const isRegisteredBefore = db_helpers.isRegisteredBefore;
 const getAllMapsByUserName = db_helpers.getAllMapsByUserName;
 const getFavouritesByUserName = db_helpers.getFavouritesByUserName;
@@ -72,6 +72,7 @@ const loginRoute = require("./routes/login");
 const logoutRoute = require("./routes/logout");
 const registerRoute = require("./routes/register");
 const profileRoute = require("./routes/profile");
+
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
