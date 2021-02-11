@@ -26,28 +26,26 @@ module.exports = (db) => {
   router.post("/", (req, res) => {
     let user = req.body.user;
     let password = req.body.pass;
-    let isRegistered = false;
-    isRegisteredBefore(user).then(data => {
-      if(data){
-      isRegistered = true;
-      }
-      if (isRegistered) {
+    isRegisteredBefore(user).then(isRegistered => {
+      if(isRegistered) {
         getPassword(user).then( pass => {
           if (bcrypt.compareSync(password, pass)) {
-            let newU = {username: user, password};
-            newUser(newU);
             req.session['user_id'] = user;
             res.redirect("/");
           } else {
+            user = null;
             res.status(403);
-            let error_message = `<h1>Error:403</h1> <h2><b>Please check your   password!!!</h2><h3><a href="/login">Login</a></h3></b>\n`;
-            templateVars ={ error_message }
+            let error_message = `Please check your password!!`;
+            let code = 403;
+            templateVars ={ user, error_message, code};
             res.render("error", templateVars);
           }})
       } else {
-        res.status(403);
-        let error_message = `<h1>Error:403</h1> <h2><b>This user(${user}) is   not registered!!!\n Please Register first!</h2><h3><a href="/  register">Register</a></h3></b>\n`;
-          templateVars ={ error_message }
+          user = null;
+          res.status(403);
+          let error_message = `This username is not registered! Please Register first!`;
+          let code = 403;
+          templateVars ={ user, error_message, code};
           res.render("error", templateVars);
     }})
   });

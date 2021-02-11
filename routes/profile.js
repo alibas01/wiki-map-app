@@ -41,9 +41,10 @@ module.exports = (db) => {
           req.session['user_id'] = new_user;
           res.redirect("/profile");
         } else {
-          res.status(400);
-          let error_message = `<h1>Error:400</h1> <h2><b>This user(${new_user})   registered before!!!</h2><h3><a href="/profile">Profile Page</a></h3></  b>\n`;
-          templateVars ={ error_message };
+          res.status(404);
+          let error_message = `This user(${new_user})   registered before!!!`;
+          let code = 404;
+          templateVars ={ user, error_message, code};
           res.render("error", templateVars);
         }
       })} else if(req.body.email) {
