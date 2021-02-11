@@ -81,7 +81,7 @@ app.get("/", (req, res) => {
     const templateVars = { locations: locations };
     res.render('index', templateVars);
   })
-  .catch(err => res.status(500).send(err.stack));
+    .catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/points', (req, res) => {
@@ -91,17 +91,33 @@ app.get('/points', (req, res) => {
     const templateVars = { greeting: 'welcome',locations: locations };
     res.render('points', templateVars);
   })
-  .catch(err => res.status(500).send(err.stack));
+    .catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/new-map', (req, res) => {
   res.render('new');
 });
 
-  // app.post('/new-map', (req, res) => {
-  //   console.log('new map submit', req.body);
-  //   res.status(200).json('success');
-  // });
+
+//temporarily store points
+let points = [];
+
+app.post('/new-map/points', (req, res) => {
+  console.log('new-map/points post', req.body);
+  points.push(req.body);
+  // res.status(200).json('success');
+  // res.send({words: 0});
+  res.send(points);
+  // res.status(200).json('success');
+});
+
+app.get('/new-map/points', (req, res) => {
+  console.log('new-map/points get', req.body);
+  // res.status(200).json('success');
+  // res.send({words: 0});
+  res.send(points);
+  // res.status(200).json('success');
+});
 
 app.post('/new', (req, res) => {
   const currentPosition = JSON.parse(req.body.position);
@@ -212,6 +228,6 @@ app.get('/profile', (req, res) => {
 
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);
-  });
+});
 
 

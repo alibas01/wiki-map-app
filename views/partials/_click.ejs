@@ -2,6 +2,7 @@
   <script>
     function initMap(){
       let markerList = [];
+      let tempMarkerList = [];
       const myLatlng = { lat: 43.6532, lng: -79.3832 };
       const options ={
         zoom: 10,
@@ -10,6 +11,7 @@
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
       const image = "imgs/map-pin.png";
+      const imagePosted = "imgs/map-pin-ready.png";
       initZoomControl(map);
 
 
@@ -45,7 +47,6 @@
         );
       }
 
-
       // Configure the click listener.
       map.addListener("click", (mapsMouseEvent) => {
         $('#new-point').css('display', 'block');
@@ -56,12 +57,8 @@
         $('#point-lat').text(mapsMouseEvent.latLng.toJSON().lat);
         $('#point-long').text(mapsMouseEvent.latLng.toJSON().lng);
 
-        //hide menu
+        //show menu
         $('.collapse').collapse("show");
-
-
-        console.log(mapsMouseEvent.latLng.toJSON());
-
 
         // document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
         //infoWindow.setContent("Select this location!");
@@ -71,15 +68,138 @@
 
       });
 
+      let markerCount = 0;
       // Adds a marker to the map and push to the array.
       function addMarker(location, image) {
-        const marker = new google.maps.Marker({
+        console.log(++markerCount);
+        clearMarkers(markerList);
+        //marker.setMap(null);
+        tempMarkerList.push(new google.maps.Marker({
           position: location,
           map: map,
-          icon: {url: image, scaledSize: new google.maps.Size(50, 50)}
-        });
-        markerList.push(marker);
+          icon: {url: image, scaledSize: new google.maps.Size(50, 50)},
+          draggable: true
+        }));
+
+
+        // re-add listeners
+        // for (let i = 0; i < markerList.length; i++) {
+        //   const customMarker = new google.maps.Marker({
+        //     position: markerList[i].position,
+        //     map: map,
+        //     icon: {url: image, scaledSize: new google.maps.Size(50, 50)},
+        //     draggable: true
+        //   });
+        //   google.maps.event.addListener(customMarker, 'click', function() {
+        //     console.log('marker clicked');
+        //     $('#point-lat').text(customMarker.position.toJSON().lat);
+        //     $('#point-long').text(customMarker.position.toJSON().lng);
+
+        //     //show menu
+        //     $('.collapse').collapse("show");
+        //  });
+        // }
+
       }
+
+      // let larker = new google.maps.Marker({
+      //     position: location,
+      //     map: map,
+      //     icon: {url: image, scaledSize: new google.maps.Size(50, 50)},
+      //     draggable: true
+      //   });
+
+      const pointForm = document.getElementById('new-point');
+        google.maps.event.addDomListener(pointForm, "submit", () => {
+          // markerList.push(larker);
+
+          // console.log('added marker. markerList:', markerList);
+          // console.log('added marker. marker:', marker.position.toJSON());
+          // window.alert("Point was posted");
+
+
+          //fetch field data
+          const title =       $('#point-title')[0];
+          const lat =         $('#point-lat')[0];
+          const long =        $('#point-long')[0];
+          const category =    $('#point-category')[0];
+          const description = $('#point-desc')[0];
+
+          // console.log(lat, long);
+
+          //error handling
+          if (!title.value.length ||
+              !category.value.length ||
+              !description.value.length ||
+              !lat.textContent.length ||
+              !long.textContent.length) {
+            //show/hide error messages
+            $('.error-box').slideToggle(200,'swing');
+          } else {
+            //save data
+            const newPoint = { name: title.value, lat: lat.textContent, long: long.textContent, description: description.value, category: category.value};
+
+            //clear text fields
+            title.value = '';
+            category.value = '';
+            description.value = '';
+            lat.textContent = '';
+            long.textContent = '';
+
+
+            $.ajax({
+              method: "POST",
+              url: "/new-map/points",
+              data: newPoint
+            }).done((res) => {
+              console.log('response from server:',res);
+              deleteMarkers(tempMarkerList);
+              for(let item of res) {
+                console.log(item);
+                const tempMarker = new google.maps.Marker({position: { lat: Number(item.lat), lng: Number(item.long) }, map: map, icon: {url: imagePosted, scaledSize: new google.maps.Size(50, 50)}})
+                markerList.push(tempMarker);
+
+               google.maps.event.addListener(tempMarker, 'click', function() {
+                  console.log('marker clicked');
+                  $('#point-lat').text(tempMarker.position.toJSON().lat);
+                  $('#point-long').text(tempMarker.position.toJSON().lng);
+                  $('#point-title')[0].value = item.name;
+                  $('#point-category')[0].value = item.category;
+                  $('#point-desc')[0].value = item.description;
+
+                  map.panTo({ lat: tempMarker.position.toJSON().lat, lng: tempMarker.position.toJSON().lng })
+
+                  //show menu
+                  $('.collapse').collapse("show");
+                });
+              }
+            });
+          }
+
+        });
+
+      // Sets the map on all markers in the array.
+      const setMapOnAll = function(map, list) {
+        console.log(list);
+        // for (let i = 0; i < list.length; i++) {
+        //   console.log('markerlist:', list);
+        //   list[i].setMap(map);
+        // }
+      }
+
+      // Removes the markers from the map, but keeps them in the array.
+      const clearMarkers = function(list) {
+        console.log('clearMarkers', list)
+        setMapOnAll(null, list);
+      }
+
+      // Deletes all markers in the array by removing references to them.
+      const deleteMarkers = function(list) {
+        console.log('delete markers:', list);
+        clearMarkers(list);
+        list = [];
+      }
+
     }
 
 

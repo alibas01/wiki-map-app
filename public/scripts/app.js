@@ -50,23 +50,30 @@ $(document).ready(() => {
     const category =    $('#point-category')[0];
     const description = $('#point-desc')[0];
 
+    console.log(lat, long);
+
     //error handling
     if (!title.value.length ||
         !category.value.length ||
-        !description.value.length) {
+        !description.value.length ||
+        !lat.textContent.length ||
+        !long.textContent.length) {
       //show/hide error messages
       $('.error-box').slideToggle(200,'swing');
     } else {
       //save data
-      const newPoint = { name: title.value, lat: lat.textContent, long: long.textContent, description: description.value};
-      console.log(newPoint);
-      newMap['title'] = title.value;
-      // newMap['position'] = position.value;
-      newMap['category'] = category.value;
-      newMap['description'] = description.value;
+      const newPoint = { name: title.value, lat: lat.textContent, long: long.textContent, description: description.value, category: category.value};
+
+      // $.ajax({
+      //   method: "POST",
+      //   url: "/new-map/points",
+      //   data: newPoint
+      // }).done((data) => {
+      //   console.log('Added point:', data);
+      // });
     }
 
-    console.log(markerList);
+    // console.log(markerList);
     //hide box
 
     // INSERT INTO locations (
