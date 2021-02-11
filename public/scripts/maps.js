@@ -1,4 +1,5 @@
 $(() => {
+  const current_user = $('#current_user').text();
   const load = function(){
     $('.recommandation-content').empty();
     $.ajax({url: '/index_map', type: 'GET'}).done((result)=> {
@@ -21,19 +22,26 @@ $(() => {
         $('.recommandation-content').append(favouriteItem);
         const $button = $(`.favourite_${map['id']}`);
         $button.on('click', function (event) {
-          event.preventDefault();
-          console.log('Button clicked, performing ajax call...');
-          const user_name = $('#current_user').text().split(" ")[3];
-          const map_id = $(`#current_map_${map['id']}`).text();
-          const data = {user_name, map_id};
-          console.log(data);
-          $.ajax({url: '/favourite', type: 'POST', data: data}).always(function(){
-            console.log('reload');
-            load();
-          })
+          if (!current_user) {
+            $("#unfavourite").slideDown(1000);
+          } else {
+            event.preventDefault();
+            console.log('Button clicked, performing ajax call...');
+            const user_name = $('#current_user').text().split(" ")[3];
+            const map_id = $(`#current_map_${map['id']}`).text();
+            const data = {user_name, map_id};
+            console.log(data);
+            $.ajax({url: '/favourite', type: 'POST', data: data}).always(function(){
+              console.log('reload');
+              load();
+            })
+          }
         });
       }
     });
   }
   load();
+  $("#up1").click(function(){
+    $("#current_user").slideUp(1000);
+  });
 });
