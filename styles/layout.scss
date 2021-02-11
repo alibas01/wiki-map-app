@@ -120,7 +120,7 @@ body {
   }
 
   .new-map-box {
-    z-index: 1;
+    z-index: 3;
     position: absolute;
     top: 25%;
     left: 50%;
@@ -147,7 +147,7 @@ body {
     margin: 1em;
     border-radius: 10px;
 
-    z-index: 4;
+    z-index: 1;
 
     .error-box {
       background-color: rgb(228, 50, 50);
@@ -156,6 +156,14 @@ body {
       justify-content: space-around;
       margin-bottom: 1em;
     }
+  }
+
+  .map-cover {
+    width: 100%;
+    position: absolute;
+    z-index: 2;
+    padding: 500px;
+    background-color: rgba(187, 187, 187, 0.534);
   }
 }
 

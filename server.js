@@ -106,23 +106,6 @@ app.get('/points', (req, res) => {
     .catch(err => res.status(500).send(err.stack));
 });
 
-app.get('/new-map', (req, res) => {
-  console.log('first console log',req.session['user_id']);
-  if (!req.session['user_id']) {
-
-    let error_message = `Please Register to Create Maps!`;
-    let code = 403;
-    const user = null;
-
-    const templateVars = { user, error_message, code};
-    res.render("error", templateVars);
-  } else {
-    const user = req.session['user_id']; // this should be on all get routes
-    const templateVars = { user:user };
-    res.render('new', templateVars);
-  }
-});
-
 
 //temporarily store points
 let points = [];
@@ -138,18 +121,79 @@ app.get('/new-map/points', (req, res) => {
   res.send(points);
 });
 
+app.post('/points', (req, res) => {
+  console.log('/points post', req.body);
+  findUserIdByName(req.session['user_id']).then(userID => {
+
+    const newPointObj = {
+      name: req.body.name,
+      map_id: Number(req.body.map_id),
+      lat: req.body.lat,
+      long: req.body.long,
+      user_id: Number(userID),
+
+      // picture_url:
+      description: req.body.description,
+      website: 'www.google.com',
+
+    };
+
+    newPoint(newPointObj)
+      .then(point => {
+        console.log(point);
+        getAllLocations(Number(req.body.map_id))
+          .then(allPoints => {
+            console.log('all points for this map in server:', allPoints);
+            res.send(allPoints);
+          })
+          .catch(err => {
+            console.log('There was an error fetching all points:', err);
+          });
+        console.log('created new point...');
+      });
+  });
+
+});
+
+app.get('/new', (req, res) => {
+  if (!req.session['user_id']) {
+
+    let error_message = `Please Register or Sign In to Create Maps!`;
+    let code = 403;
+    const user = null;
+
+    const templateVars = { user, error_message, code};
+    res.render("error", templateVars);
+  } else {
+    const user = req.session['user_id']; // this should be on all get routes
+    const templateVars = { user:user };
+    res.render('new', templateVars);
+  }
+});
+
 app.post('/new', (req, res) => {
-  findUserIdByName(req.session['user_id']).then(res => {
+  findUserIdByName(req.session['user_id']).then(userID => {
     const newMapObj = {
-      user_id: res,
+      user_id: userID,
       title: req.body.title,
       city: req.body.city,
       isPublic: req.body.visibility
     };
     newMap(newMapObj);
     console.log(newMapObj);
+    getMapIdbyUserId(userID)
+      .then(mapID => {
+        console.log('mapID', mapID);
+        // res.render('wow');
+        // res.status(200).send(mapID);
+        res.send({mapID});
+      })
+      .catch(err => {
+        console.log('there was an error:', err);
+      });
   });
 });
+
 
 //see specific details
 app.get('/detail/:id', (req, res) => {

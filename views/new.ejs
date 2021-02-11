@@ -18,9 +18,10 @@
   <body>
     <%- include('partials/_nav') %>
     <%- include('partials/_click') %>
+    <div class="map-cover"></div>
 
     <div class="new-map-box">
-      <form class="form-inline" id="new-map-info" action="/new-map" method="POST">
+      <form class="form-inline" id="new-map-info" action="/new" method="POST">
         <div id="current-position">
           <h1>Create A New Map</h1>
 
@@ -113,5 +114,6 @@
         </div>
       </nav>
     </form>
+    <p id="mapID" hidden>#</p>
   </body>
 </html>

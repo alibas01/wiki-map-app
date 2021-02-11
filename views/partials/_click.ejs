@@ -3,7 +3,7 @@
     function initMap(){
       let markerList = [];
       let tempMarkerList = [];
-      const myLatlng = { lat: 43.6532, lng: -79.3832 };
+      const myLatlng = { lat: 43.85078, lng: -79.02033 };
       const options ={
         zoom: 10,
         center: myLatlng,
@@ -13,26 +13,6 @@
       const submitted = "imgs/map-pin-red.png";
       const unsubmitted = "imgs/map-pin-black.png";
       initZoomControl(map);
-
-
-      // if (navigator.geolocation) {
-      //   navigator.geolocation.getCurrentPosition(
-      //     (position) => {
-      //       const pos = {
-      //         lat: position.coords.latitude,
-      //         lng: position.coords.longitude,
-      //       };
-      //       infoWindow.setPosition(pos);
-      //       infoWindow.setContent("Current Location");
-      //       infoWindow.open(map);
-      //       map.setCenter(pos);
-      //       // document.getElementById("position").innerHTML = JSON.stringify(pos);
-      //     },
-      //     () => {
-      //       // handleLocationError(true, infoWindow, map.getCenter());
-      //     }
-      //   );
-      // }
 
       //manually enable zoom controls
       function initZoomControl(map) {
@@ -60,6 +40,7 @@
         //show menu
         $('.collapse').collapse("show");
 
+        //zoom and pan
         map.setZoom(13);
         map.panTo({ lat: mapsMouseEvent.latLng.toJSON().lat, lng: mapsMouseEvent.latLng.toJSON().lng })
       });
@@ -108,6 +89,8 @@
           const long =        $('#point-long')[0];
           const category =    $('#point-category')[0];
           const description = $('#point-desc')[0];
+          const mapID =       $('#mapID')[0];
+          console.log(Number(mapID.innerHTML));
 
           //error handling
           if (!title.value.length ||
@@ -119,7 +102,7 @@
             $('.error-box').slideToggle(200,'swing');
           } else {
             //save data
-            const newPoint = { name: title.value, lat: lat.textContent, long: long.textContent, description: description.value, category: category.value};
+            const newPoint = { map_id: Number(mapID.innerHTML), name: title.value, lat: lat.textContent, long: long.textContent, description: description.value, category: category.value};
 
             //clear text fields
             title.value = '';
@@ -131,10 +114,11 @@
 
             $.ajax({
               method: "POST",
-              url: "/new-map/points",
+              url: "/points",
               data: newPoint
             }).done((res) => {
-              console.log('response from server:',res);
+              console.log('location post request done. response:', res);
+
               deleteMarkers(tempMarkerList);
               deleteMarkers(markerList);
 
@@ -170,22 +154,18 @@
 
       // Sets the map on all markers in the array.
       const setMapOnAll = function(map, list) {
-        console.log(list);
         for (let i = 0; i < list.length; i++) {
-          console.log('markerlist:', list);
           list[i].setMap(map);
         }
       }
 
       // Removes the markers from the map, but keeps them in the array.
       const clearMarkers = function(list) {
-        console.log('clearMarkers', list)
         setMapOnAll(null, list);
       }
 
       // Deletes all markers in the array by removing references to them.
       const deleteMarkers = function(list) {
-        console.log('delete markers:', list);
         clearMarkers(list);
         list = [];
       }

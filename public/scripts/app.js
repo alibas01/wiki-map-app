@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 $(document).ready(() => {
+  $('.collapse').collapse("hide");
 
   let newMap = {
     points: []
@@ -35,17 +36,16 @@ $(document).ready(() => {
       //hide box and enable map
       $(".new-map-box").css('display', 'none');
 
-
+      //create map and store mapID in html
       $.ajax({
         method: "POST",
         url: "/new",
         data: newMap
-      }).done((data) => {
-        console.log('Added map:', data);
+      }).done((mapID) => {
+        $('#mapID')[0].innerHTML = mapID['mapID'];
+        $('.map-cover').css('display','none');
       });
     }
-
-    console.log(newMap);
   });
 
 
