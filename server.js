@@ -105,18 +105,12 @@ let points = [];
 app.post('/new-map/points', (req, res) => {
   console.log('new-map/points post', req.body);
   points.push(req.body);
-  // res.status(200).json('success');
-  // res.send({words: 0});
   res.send(points);
-  // res.status(200).json('success');
 });
 
 app.get('/new-map/points', (req, res) => {
   console.log('new-map/points get', req.body);
-  // res.status(200).json('success');
-  // res.send({words: 0});
   res.send(points);
-  // res.status(200).json('success');
 });
 
 app.post('/new', (req, res) => {
