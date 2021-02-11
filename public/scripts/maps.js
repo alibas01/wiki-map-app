@@ -41,7 +41,4 @@ $(() => {
     });
   }
   load();
-  $("#up1").click(function(){
-    $("#current_user").slideUp(1000);
-  });
 });
