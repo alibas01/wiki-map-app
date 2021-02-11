@@ -116,10 +116,11 @@ app.get('/new-map', (req, res) => {
 
     const templateVars = { user, error_message, code};
     res.render("error", templateVars);
+  } else {
+    const user = req.session['user_id']; // this should be on all get routes
+    const templateVars = { user:user };
+    res.render('new', templateVars);
   }
-  const user = req.session['user_id']; // this should be on all get routes
-  const templateVars = { user:user };
-  res.render('new', templateVars);
 });
 
 
@@ -138,26 +139,16 @@ app.get('/new-map/points', (req, res) => {
 });
 
 app.post('/new', (req, res) => {
-  // const currentPosition = JSON.parse(req.body.position);
-  // const user = req.session['user_id'];
-  console.log('/new route', req.body);
-
-  console.log('req session',req.session['user_id']);
-  //${inputObj.user_id}`, `${inputObj.title}`, `${inputObj.city}`, `${inputObj.last_updated_at}`, `${inputObj.isPublic}
-
   findUserIdByName(req.session['user_id']).then(res => {
     const newMapObj = {
       user_id: res,
       title: req.body.title,
       city: req.body.city,
-      // last_updated_at: Date.now(),
       isPublic: req.body.visibility
     };
     newMap(newMapObj);
     console.log(newMapObj);
   });
-  // getMapIdbyUserId(req.session['user_id']);
-  //res.redirect(`/detail/${newMap.id}`);
 });
 
 //see specific details
