@@ -34,12 +34,14 @@ const getAllLocations = db_helpers.getAllLocations;
 const findUserIdByName = db_helpers.findUserIdByName;
 const getPassword = db_helpers.getPassword;
 const isRegisteredBefore = db_helpers.isRegisteredBefore;
-const getAllMaps = db_helpers.getAllMaps;
+const getAllMapsByUserName = db_helpers.getAllMapsByUserName;
 const getFavouritesByUserName = db_helpers.getFavouritesByUserName;
 const search = db_helpers.search;
 const getIdByUserName = db_helpers.getIdByUserName;
 const deleteFavourites = db_helpers.deleteFavourites;
 const getAllLocationsByMapId = db_helpers.getAllLocationsByMapId;
+const getAllLocationsByUserName = db_helpers.getAllLocationsByUserName;
+const getAllMaps = db_helpers.getAllMaps;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -85,50 +87,128 @@ app.use("/profile", profileRoute(db));
 app.use('/public', express.static('public'));
 
 app.get("/", (req, res) => {
-  getAllMaps().then(rows => {
-    const user = req.session['user_id'];
-    const templateVars = { maps: rows, user };
-    console.log(templateVars);
-    res.render('index', templateVars);
-  })
-  .catch(err => res.status(500).send(err.stack));
+  const user = req.session['user_id'];
+  const templateVars = { user };
+  res.render('index', templateVars);
 });
 
 app.get("/index_map", (req, res) => {
   const user = req.session['user_id'];
-    getAllMaps(user).then(rows => {
-    const templateVars = { maps: rows, user };
-    res.status(200).json(templateVars);
-  }).catch(err => res.status(500).send(err.stack));
+  if (user) {
+    getAllMapsByUserName(user).then(rows => {
+      const templateVars = { maps: rows, user };
+      res.status(200).json(templateVars);
+    }).catch(err => res.status(500).send(err.stack));
+  } else {
+    getAllMaps().then(rows => {
+      const vars = {maps: rows};
+      res.status(200).json(vars);
+    })
+  }
 });
 
 app.get('/points', (req, res) => {
   const user = req.session['user_id'];
-  getAllLocations(user).then(rows => {
+  getAllLocationsByUserName(user).then(rows => {
     const locations = rows;
     console.log(locations)
     const templateVars = { greeting: 'welcome',locations: locations, user };
     res.render('points', templateVars);
   })
-  .catch(err => res.status(500).send(err.stack));
+    .catch(err => res.status(500).send(err.stack));
 });
 
-app.get('/new-map', (req, res) => {
-  const user = req.session['user_id'];
-  res.render('new');
+// app.get('/new-map', (req, res) => {
+//   const user = req.session['user_id'];
+//   res.render('new');
+
+//temporarily store points
+let points = [];
+
+app.post('/new-map/points', (req, res) => {
+  console.log('new-map/points post', req.body);
+  points.push(req.body);
+  res.send(points);
+});
+
+app.get('/new-map/points', (req, res) => {
+  console.log('new-map/points get', req.body);
+  res.send(points);
+});
+
+app.post('/points', (req, res) => {
+  console.log('/points post', req.body);
+  findUserIdByName(req.session['user_id']).then(userID => {
+
+    const newPointObj = {
+      name: req.body.name,
+      map_id: Number(req.body.map_id),
+      lat: req.body.lat,
+      long: req.body.long,
+      user_id: Number(userID),
+
+      // picture_url:
+      description: req.body.description,
+      website: 'www.google.com',
+
+    };
+
+    newPoint(newPointObj)
+      .then(point => {
+        console.log(point);
+        getAllLocations(Number(req.body.map_id))
+          .then(allPoints => {
+            console.log('all points for this map in server:', allPoints);
+            res.send(allPoints);
+          })
+          .catch(err => {
+            console.log('There was an error fetching all points:', err);
+          });
+        console.log('created new point...');
+      });
+  });
+
+});
+
+app.get('/new', (req, res) => {
+  if (!req.session['user_id']) {
+
+    let error_message = `Please Register or Sign In to Create Maps!`;
+    let code = 403;
+    const user = null;
+
+    const templateVars = { user, error_message, code};
+    res.render("error", templateVars);
+  } else {
+    const user = req.session['user_id']; // this should be on all get routes
+    const templateVars = { user:user };
+    res.render('new', templateVars);
+  }
 });
 
 app.post('/new', (req, res) => {
-  const currentPosition = JSON.parse(req.body.position);
-  const newMap = {
-    id: data.length,
-    lat: currentPosition['lat'],
-    long: currentPosition['lng'],
-    name: req.body.title,
-    description: req.body.description
-  };
-  res.redirect(`/detail/${newMap.id}`);
+  findUserIdByName(req.session['user_id']).then(userID => {
+    const newMapObj = {
+      user_id: userID,
+      title: req.body.title,
+      city: req.body.city,
+      isPublic: req.body.visibility
+    };
+    newMap(newMapObj);
+    console.log(newMapObj);
+    getMapIdbyUserId(userID)
+      .then(mapID => {
+        console.log('mapID', mapID);
+        // res.render('wow');
+        // res.status(200).send(mapID);
+        res.send({mapID});
+      })
+      .catch(err => {
+        console.log('there was an error:', err);
+      });
+  });
 });
+
 
 //see specific details
 app.get('/detail/:map_id/:location_id', (req, res) => {
@@ -213,8 +293,6 @@ app.post("/favourite", (req, res) => {
     res.redirect('/');
   })
 })
-
-
 
 app.listen(PORT, () => {
   console.log(`wikimapapp listening on port ${PORT}`);

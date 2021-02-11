@@ -1,42 +1,20 @@
 <div>
   <script>
     function initMap(){
-      const myLatlng = { lat: 43.6532, lng: -79.3832 };
+      let markerList = [];
+      let tempMarkerList = [];
+      const myLatlng = { lat: 43.85078, lng: -79.02033 };
       const options ={
         zoom: 10,
         center: myLatlng,
         disableDefaultUI: true
       };
       const map = new google.maps.Map(document.getElementById("map"), options);
-      const image = "imgs/map-pin.png";
+      const submitted = "imgs/map-pin-red.png";
+      const unsubmitted = "imgs/map-pin-black.png";
       initZoomControl(map);
 
-        // Create the initial InfoWindow.
-      let infoWindow = new google.maps.InfoWindow({
-        // content: "Click the map to get Lat/Lng!",
-        // position: myLatlng,
-      });
-      // const marker;
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude,
-            };
-            infoWindow.setPosition(pos);
-            infoWindow.setContent("Current Location");
-            infoWindow.open(map);
-            map.setCenter(pos);
-            // document.getElementById("position").innerHTML = JSON.stringify(pos);
-          },
-          () => {
-            handleLocationError(true, infoWindow, map.getCenter());
-          }
-        );
-      }
-
+      //manually enable zoom controls
       function initZoomControl(map) {
         document.querySelector(".zoom-control-in").onclick = function () {
           map.setZoom(map.getZoom() + 1);
@@ -49,70 +27,152 @@
         );
       }
 
-
-      infoWindow.open(map);
       // Configure the click listener.
       map.addListener("click", (mapsMouseEvent) => {
-        $('.new-map-box').css('display', 'none');
+        $('#new-point').css('display', 'block');
 
-        // Close the current InfoWindow.
-        infoWindow.close();
-        // infoWindow = new google.maps.InfoWindow({
-        //   position: mapsMouseEvent.latLng,
-        // });
+        addMarker(mapsMouseEvent.latLng, submitted);
 
-        const infoContent =
-        `<form class="form-inline" action="/new-map" method="POST">` +
-          `<div id="current-position">` +
-            `<h4>New Point:</h4>` +
-            `<div class="flex-row">` +
-              `<label for="position">Position:</label>` +
-              `<input id="positionImport" type="text" name="position" placeholder="position">` +
-            `</div><br>` +
-            `<div class="flex-row">` +
-              `<label for="title">Title:</label>` +
-              `<input type="text" name="title" placeholder="title">` +
-            `</div><br>` +
-            `<div class="flex-row">` +
-              `<label for="category">Category:</label>` +
-              `<select name="category" id="category">` +
-                `<option value="drinking">drinking</option>` +
-                `<option value="restaurants">restaurants</option>` +
-                `<option value="art galleries">art galleries</option>` +
-                `<option value="historic places">historic places</option>` +
-                `<option value="parks">parks</option>` +
-                `<option value="shopping malls">shopping malls</option>` +
-              `</select>` +
-            `</div><br>` +
-              `<div class="flex-column">` +
-                `<textarea name="description" type="text" placeholder="description"></textarea><br>` +
-                `<button type="submit" class="btn">Save</button>` +
-              `</div>` +
-            `</div>` +
-          `</form>`;
+        //set view with lat and long
+        $('#point-lat').text(mapsMouseEvent.latLng.toJSON().lat);
+        $('#point-long').text(mapsMouseEvent.latLng.toJSON().lng);
 
-        // Create a new InfoWindow each time there is a click
-        infoWindow = new google.maps.InfoWindow({
-          content: infoContent,
-          position: mapsMouseEvent.latLng,
-          pixelOffset: new google.maps.Size(0, -75)
-        });
+        //show menu
+        $('.collapse').collapse("show");
 
-        const marker = new google.maps.Marker({
-          position: mapsMouseEvent.latLng,
-          map,
-          icon: {url: image, scaledSize: new google.maps.Size(50, 50)}
-        });
-
-
-        // document.getElementById("position").innerHTML=JSON.stringify(mapsMouseEvent.latLng.toJSON(), null, 2);
-        //infoWindow.setContent("Select this location!");
-        // infoWindow.setContent({content: infoContent});
-        map.setZoom(12);
-        // map.setCenter({lat: marker.position.lat(), lng: marker.position.lng()});
-        infoWindow.open(map);
+        //zoom and pan
+        map.setZoom(13);
+        map.panTo({ lat: mapsMouseEvent.latLng.toJSON().lat, lng: mapsMouseEvent.latLng.toJSON().lng })
       });
+
+      let markerCount = 0;
+      // Adds a marker to the map and push to the array.
+      function addMarker(location, submitted) {
+        console.log(++markerCount);
+        clearMarkers(tempMarkerList);
+
+        const tempMarker = new google.maps.Marker({
+          position: location,
+          map: map,
+          icon: {url: submitted, scaledSize: new google.maps.Size(50, 50)},
+          draggable: true
+        })
+        tempMarkerList.push(tempMarker);
+
+        //add drag event listener. update lat/lng
+        google.maps.event.addListener(tempMarker, 'drag', function(ev) {
+          $('#point-lat').text(ev.latLng.toJSON().lat);
+          $('#point-long').text(ev.latLng.toJSON().lng);
+        });
+
+        //add click event listener. update lat/lng
+        google.maps.event.addListener(tempMarker, 'click', function() {
+          console.log('marker clicked');
+          $('#point-lat').text(tempMarker.position.toJSON().lat);
+          $('#point-long').text(tempMarker.position.toJSON().lng);
+          $('#point-title')[0].value = '';
+          $('#point-category')[0].value = '';
+          $('#point-desc')[0].value = '';
+
+          map.panTo({ lat: tempMarker.position.toJSON().lat, lng: tempMarker.position.toJSON().lng })
+
+          //show menu
+          $('.collapse').collapse("show");
+        });
+      }
+
+      const pointForm = document.getElementById('new-point');
+        google.maps.event.addDomListener(pointForm, "submit", () => {
+          //fetch field data
+          const title =       $('#point-title')[0];
+          const lat =         $('#point-lat')[0];
+          const long =        $('#point-long')[0];
+          const category =    $('#point-category')[0];
+          const description = $('#point-desc')[0];
+          const mapID =       $('#mapID')[0];
+          console.log(Number(mapID.innerHTML));
+
+          //error handling
+          if (!title.value.length ||
+              !category.value.length ||
+              !description.value.length ||
+              !lat.textContent.length ||
+              !long.textContent.length) {
+            //show/hide error messages
+            $('.error-box').slideToggle(200,'swing');
+          } else {
+            //save data
+            const newPoint = { map_id: Number(mapID.innerHTML), name: title.value, lat: lat.textContent, long: long.textContent, description: description.value, category: category.value};
+
+            //clear text fields
+            title.value = '';
+            category.value = '';
+            description.value = '';
+            lat.textContent = '';
+            long.textContent = '';
+
+
+            $.ajax({
+              method: "POST",
+              url: "/points",
+              data: newPoint
+            }).done((res) => {
+              console.log('location post request done. response:', res);
+
+              deleteMarkers(tempMarkerList);
+              deleteMarkers(markerList);
+
+              for(let item of res) {
+                console.log(item);
+                const tempMarker = new google.maps.Marker({position: { lat: Number(item.lat), lng: Number(item.long) }, map: map, icon: {url: unsubmitted, scaledSize: new google.maps.Size(50, 50)}, draggable: true})
+                markerList.push(tempMarker);
+
+
+                google.maps.event.addListener(tempMarker, 'drag', function(ev) {
+                  $('#point-lat').text(ev.latLng.toJSON().lat);
+                  $('#point-long').text(ev.latLng.toJSON().lng);
+                });
+
+                google.maps.event.addListener(tempMarker, 'click', function() {
+                  console.log('marker clicked');
+                  $('#point-lat').text(tempMarker.position.toJSON().lat);
+                  $('#point-long').text(tempMarker.position.toJSON().lng);
+                  $('#point-title')[0].value = item.name;
+                  $('#point-category')[0].value = item.category;
+                  $('#point-desc')[0].value = item.description;
+
+                  map.panTo({ lat: tempMarker.position.toJSON().lat, lng: tempMarker.position.toJSON().lng })
+
+                  //show menu
+                  $('.collapse').collapse("show");
+                });
+              }
+            });
+          }
+
+        });
+
+      // Sets the map on all markers in the array.
+      const setMapOnAll = function(map, list) {
+        for (let i = 0; i < list.length; i++) {
+          list[i].setMap(map);
+        }
+      }
+
+      // Removes the markers from the map, but keeps them in the array.
+      const clearMarkers = function(list) {
+        setMapOnAll(null, list);
+      }
+
+      // Deletes all markers in the array by removing references to them.
+      const deleteMarkers = function(list) {
+        clearMarkers(list);
+        list = [];
+      }
     }
+
+
+
   </script>
   <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC6z5vqv2nyIpDCo9Jovbl9uZkSXlHn-0E&callback=initMap&libraries=&v=weekly"
