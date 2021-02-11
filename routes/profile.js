@@ -13,6 +13,7 @@ module.exports = (db) => {
     const updatePass = db_helpers.updatePass;
     const getUsers = db_helpers.getUsers;
     const isRegisteredBefore = db_helpers.isRegisteredBefore;
+    const getPassword = db_helpers.getPassword;
 
     // GET /profile
     router.get('/', (req, res) => {
@@ -51,11 +52,19 @@ module.exports = (db) => {
           const new_email = req.body.email;
           updateEmail(new_email, user);
           res.redirect("/profile");
+        } else if (req.body.old_pass) {
+          getPassword(user).then( pass => {
+            if (bcrypt.compareSync(req.body.old_pass, pass) && req.body.pass) {
+              const new_pass = bcrypt.hashSync(req.body.pass, salt);
+              updatePass(new_pass, user);
+              res.redirect("/");
+            }
+          });
         } else {
-          const new_pass = bcrypt.hashSync(req.body.pass, salt);
-          updatePass(new_pass, user);
           res.redirect("/profile");
         }
+
     });
+
   return router;
 };
