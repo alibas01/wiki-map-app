@@ -4,7 +4,6 @@ require('dotenv').config();
 
 // Web server config
 const PORT       = process.env.PORT || 8080;
-const salt       = 10;
 const ENV        = process.env.ENV || "development";
 const express    = require("express");
 const bodyParser = require("body-parser");
@@ -13,7 +12,6 @@ const app        = express();
 const morgan     = require('morgan');
 const methodOverride = require('method-override');
 const cookieSession = require('cookie-session');
-const bcrypt = require('bcrypt');
 
 
 // PG database client/connection setup
@@ -32,6 +30,9 @@ const newPoint = db_helpers.newPoint;
 const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
+const findUserIdByName = db_helpers.findUserIdByName;
+const getPassword = db_helpers.getPassword;
+const isRegisteredBefore = db_helpers.isRegisteredBefore;
 
 // Load the logger first so all (static) HTTP requests are logged to STDOUT
 // 'dev' = Concise output colored by response status for development use.
@@ -58,11 +59,20 @@ app.use(cookieSession({
 // Note: Feel free to replace the example routes below with your own
 const usersRoutes = require("./routes/users");
 const widgetsRoutes = require("./routes/widgets");
+const loginRoute = require("./routes/login");
+const logoutRoute = require("./routes/logout");
+const registerRoute = require("./routes/register");
+const profileRoute = require("./routes/profile");
 
 // Mount all resource routes
 // Note: Feel free to replace the example routes below with your own
 app.use("/api/users", usersRoutes(db));
 app.use("/api/widgets", widgetsRoutes(db));
+app.use("/login", loginRoute(db));
+app.use("/logout", logoutRoute(db));
+app.use("/register", registerRoute(db));
+app.use("/profile", profileRoute(db));
+
 // Note: mount other resources here, using the same pattern above
 
 
@@ -75,26 +85,29 @@ app.use("/api/widgets", widgetsRoutes(db));
 app.use('/public', express.static('public'));
 
 app.get("/", (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   let map_id = 3;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
-    const templateVars = { locations: locations };
+    const templateVars = { user, locations };
     res.render('index', templateVars);
   })
     .catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/points', (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   let map_id = 2;
   getAllLocations(map_id).then(rows => {
     const locations = rows;
-    const templateVars = { greeting: 'welcome',locations: locations };
+    const templateVars = { user:user, greeting: 'welcome',locations: locations };
     res.render('points', templateVars);
   })
     .catch(err => res.status(500).send(err.stack));
 });
 
 app.get('/new-map', (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   res.render('new');
 });
 
@@ -127,6 +140,7 @@ app.post('/new', (req, res) => {
 
 //see specific details
 app.get('/detail/:id', (req, res) => {
+  const user = req.session['user_id']; // this should be on all get routes
   locations.then(result => {
     const locations = result;
     let templateVars;
@@ -145,79 +159,9 @@ app.get('/detail/:id', (req, res) => {
   });
 });
 
-app.get('/profile', (req, res) => {
-  //get current user profile
-  res.render('profile');
-});
 
 
-// GET /register
-// app.get("/register", (req, res) => {
-//   const user = users[req.session['user_id']];
-//   const templateVars = { user };
-//   if (!user) {
-//     res.render("register", templateVars);
-//   } else {
-//     res.redirect(`/`);
-//   }
-// });
 
-// POST /register
-// app.post("/register", (req, res) => {
-//   let email = req.body.email;
-//   let password = bcrypt.hashSync(req.body.password, salt);
-//   if (email !== "" && req.body.password !== "") {
-//     if (!isRegisteredBefore(users, email)) {
-//       let id = generateRandomString();
-//       let newUser = {id, email, password};
-//       users[id] = newUser;
-//       req.session['user_id'] = id;
-//       res.redirect("/urls");
-//     } else {
-//       res.status(400);
-//       res.send(`<html><body><h1>Error:400</h1> <h2><b>This email(${email}) registered before!!!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
-//     }
-//   } else {
-//     res.status(400);
-//     res.send('<html><body><h1>Error:400</h1> <h2><b>Email or Password cannot be empty!!!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n');
-//   }
-// });
-
-
-// GET /login
-// app.get("/login", (req, res) => {
-//   const user = users[req.session['user_id']];
-//   const templateVars = { user: user };
-//   if (!user) {
-//     res.render("login", templateVars);
-//   } else {
-//     res.redirect(`/`);
-//   }
-// });
-
-// POST /login
-// app.post("/login", (req, res) => {
-//   let email = req.body.email;
-//   let password = req.body.password;
-//   if (isRegisteredBefore(users, email)) {
-//     if (isPasswordMatch(users, email, password)) {
-//       req.session['user_id'] = findId(users, email);
-//       res.redirect(`/urls`);
-//     } else {
-//       res.status(403);
-//       res.send(`<html><body><h1>Error:403</h1> <h2><b>Please check your password!!!</h2><h3><a href="/login">Login</a></h3></b></body></html>\n`);
-//     }
-//   } else {
-//     res.status(403);
-//     res.send(`<html><body><h1>Error:403</h1> <h2><b>This email(${email}) is not registered!!!\n Please Register first!</h2><h3><a href="/register">Register</a></h3></b></body></html>\n`);
-//   }
-// });
-
-// GET /logout
-// app.get("/logout", (req, res) => {
-//   req.session['user_id'] = null;
-//   res.redirect(`/`);
-// });
 
 
 app.listen(PORT, () => {

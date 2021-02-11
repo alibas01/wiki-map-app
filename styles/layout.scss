@@ -103,19 +103,20 @@ body {
     height: 75vh;
 
     h1 {
-      margin: 0 2em;
-      color: $color2;
+      text-align: center;
+      margin: 1em 1em;
+      color: $color5;
     }
     h2 {
       margin: 0 2em;
     }
   }
+
   .line {
-    border-left: 2px solid $color1;
-    height: 200px;
-    position: absolute;
-    left: 50%;
-    top: 32vh;
+
+    height: 100px;
+    position: relative;
+
   }
 
   .new-map-box {

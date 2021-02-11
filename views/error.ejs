@@ -8,11 +8,21 @@
 
   <body>
     <%- include('partials/_nav') %>
+    <div class="line"><img class="err-image" src="/../public/imgs/error.jpg" style="
+      margin-left: 230px;
+      opacity: 65%;
+  "></div>
     <div class='center error-layout'>
-      <h1>Error</h1>
-      <div class="line"></div>
+      <h1 class="line"></h1>
       <!-- ERROR CODES HERE -->
-      <h2>404</h2>
+      <div class="line">
+      <h1><b>Error code: <%=code%></h1>
+      <h1><b><%=error_message%></h1>
+      </div>
+
+
+
+
     </div>
   </body>
 </html>
