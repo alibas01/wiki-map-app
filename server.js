@@ -213,18 +213,22 @@ app.post('/new', (req, res) => {
 
 //see specific details
 app.get('/detail/:map_id/:location_id', (req, res) => {
-  let map_id = req.params.map_id || 4;
+  let map_id = req.params.map_id;
+  const user = req.session['user_id'];
+  let templateVars = { user };
   getAllLocationsByMapId(map_id).then(result => {
-    const user = req.session['user_id'];
-    const locations = result;
-    const id_current = req.params.location_id;
-    const templateVars = {
-      locations,
-      id_current,
-      user,
-    };
-    console.log(templateVars);
-    res.render('detail', templateVars);
+    getAllLocationsByMapId(map_id).then(maps => {
+      console.log(maps);
+      if(maps.length > 0) {
+        const locations = result;
+        const id_current = req.params.location_id;
+        templateVars = { user, locations, id_current };
+        console.log(templateVars);
+        res.render('detail', templateVars);
+      } else {
+        res.render('no_location', templateVars);
+      }
+    })
   });
 });
 
@@ -248,23 +252,25 @@ app.post('/search', (req, res) => {
 
 app.get('/favorites', (req, res) => {
   const user = req.session['user_id'];
-  getFavouritesByUserName(user).then(favourites => {
-    const templateVars = {
-      favourites,
-      user
-    }
-    console.log(templateVars);
-    res.render('favorites', templateVars);
-  })
+  const templateVars = { user }
+  res.render('favorites', templateVars);
 })
 
 app.get('/favorites-ajax', (req, res) => {
   const user = req.session['user_id'];
-  getFavouritesByUserName(user).then(favourites => {
-    console.log(favourites);
+  getFavouritesByUserName(user).then(favs => {
+    let favourites = [];
+    let unique = [];
+    for (const fav of favs) {
+      console.log(unique, fav['map_id']);
+      if (!unique.includes(fav['map_id'])){
+        unique.push(fav['map_id']);
+        favourites.push(fav);
+      }
+    }
     const templateVars = {
       favourites,
-      user
+      user,
     }
     console.log(templateVars);
     res.status(200).json(templateVars);
@@ -272,6 +278,7 @@ app.get('/favorites-ajax', (req, res) => {
 })
 
 app.post('/delete-favourites', (req, res) => {
+  console.log(req.body);
   console.log(req.body.user_id, req.body.map_id);
   const inputObj = { user_id: Number(req.body.user_id), map_id: Number(req.body.map_id) };
   deleteFavourites(inputObj);

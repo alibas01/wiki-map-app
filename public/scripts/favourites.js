@@ -7,12 +7,12 @@ $(() => {
         <div class="col-md-6 grid-item">
           <div class="card flex-md-row mb-4 box-shadow h-md-250">
             <div class="card-body d-flex flex-column align-items-start">
-              <strong class="d-inline-block mb-2 text-success">Map Id: ${favourite['map_id']}</strong>
+              <strong class="d-inline-block mb-2 text-success">Map Id: ${favourite['map_id']} Location Name: ${favourite['location_name']}</strong>
               <h3 class="mb-0">${favourite['title']}</h3>
               <p class="card-text mb-auto">City: ${favourite['city']}</p>
-              <form method="GET" action="/detail/${favourite['map_id']}/1">
-                <td><button type="submit" class="btn btn-outline-primary">All locations</button></td>
-                <td><button id="delete-${favourite['map_id']}" class="btn btn-outline-primary">Remove from favourites</button></td>
+              <form method="GET" action="/detail/${favourite['map_id']}/${favourite['location_id']}">
+                <td><button type="submit" class="btn btn-outline-primary">Details</button></td>
+                <td><button type="button" id="delete-${favourite['map_id']}" class="btn btn-outline-primary">Remove from favourites</button></td>
               </form>
             </div>
           </div>
@@ -26,6 +26,7 @@ $(() => {
           const data = {user_id: favourite['user_id'], map_id: favourite['map_id']};
           console.log(data);
           $.ajax({url: '/delete-favourites', type: 'POST', data: data}).always(function(){
+            console.log('delete!', favourite['map_id'])
             load();
           });
         });
