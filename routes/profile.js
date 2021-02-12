@@ -40,7 +40,7 @@ module.exports = (db) => {
         if(!isRegistered) {
           updateUsername(new_user, user);
           req.session['user_id'] = new_user;
-          res.redirect("/profile");
+          res.redirect("/");
         } else {
           res.status(404);
           let error_message = `This user(${new_user})   registered before!!!`;
@@ -51,13 +51,19 @@ module.exports = (db) => {
       })} else if(req.body.email) {
           const new_email = req.body.email;
           updateEmail(new_email, user);
-          res.redirect("/profile");
+          res.redirect("/");
         } else if (req.body.old_pass) {
           getPassword(user).then( pass => {
             if (bcrypt.compareSync(req.body.old_pass, pass) && req.body.pass) {
               const new_pass = bcrypt.hashSync(req.body.pass, salt);
               updatePass(new_pass, user);
               res.redirect("/");
+            } else {
+              res.status(403);
+              let error_message = `Please check your password!!`;
+              let code = 403;
+              templateVars = { user, error_message, code};
+              res.render("error", templateVars);
             }
           });
         } else {

@@ -21,37 +21,33 @@
     <div class="map-cover"></div>
 
     <div class="map-list-box">
-      <form class="form-inline" id="new-map-info" action="/new" method="POST">
-        <div id="current-position">
-          <h1>Create A New Map</h1>
+      <h2>Select Map to Edit</h2>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">Title</th>
+            <th scope="col">No. Of Locations</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
 
-          <div class="flex-row">
-            <label for="title">Title:</label>
-            <input id="map-title" type="text" name="title" placeholder="Title">
-          </div><br>
+        <tr>
+          <td>Points of Interest</td>
+          <td>3</td>
+          <td><button type="submit" class="btn">Details</button></td>
+        </tr>
+        <tr>
+          <td>Places to Eat</td>
+          <td>9</td>
+          <td><button type="submit" class="btn">Details</button></td>
+        </tr>
+        <tr>
+          <td>Sights to See</td>
+          <td>19</td>
+          <td><button type="submit" class="btn">Details</button></td>
+        </tr>
 
-          <div class="flex-row">
-            <label for="city">City:</label>
-            <input id="map-city" type="text" name="city" placeholder="City">
-          </div><br>
-
-          <div class="flex-row">
-            <label for="privacy">Visibility:</label>
-            <select id="map-vis" name="privacy">
-              <option value="Public">Public</option>
-              <option value="Private">Private</option>
-            </select>
-          </div>
-
-          <div class="flex-column">
-            <br><button type="submit" class="btn">Start!</button>
-          </div>
-
-          <div class="error-box" style="display: none">
-            <p>Please fill in all fields</p>
-          </div>
-        </div>
-      </form>
+      </table>
     </div>
 
     <div id="map"></div>
