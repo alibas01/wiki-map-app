@@ -1,0 +1,25 @@
+.man-image {
+  width: 150px;
+  height: auto;
+  margin-left: 10px
+}
+
+form{
+  text-align: left;
+}
+
+form button {
+  border-radius: 6px;
+  background-color: crimson;
+  color: whitesmoke;
+  box-shadow: rgba(0,0,0,.4) 6px 6px 6px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+button:active {
+  position: relative;
+  left: 5px;
+  top:5px;
+  box-shadow: none;
+}

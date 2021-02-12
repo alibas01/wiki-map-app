@@ -23,17 +23,12 @@ db.query(`SELECT id FROM users`).then(data => console.log(data.rows));
 
 // Helper functions
 const db_helpers = require('./lib/db_helpers')(db);
-const getPassword = db_helpers.getPassword;
 const getMapIdbyUserId = db_helpers.getMapIdbyUserId;
-const getMapsbyId = db_helpers.getMapsbyId;
-const getUsers = db_helpers.getUsers;
-const newUser = db_helpers.newUser;
 const newPoint = db_helpers.newPoint;
 const newMap = db_helpers.newMap;
 const newLike = db_helpers.newLike;
 const getAllLocations = db_helpers.getAllLocations;
 const findUserIdByName = db_helpers.findUserIdByName;
-const isRegisteredBefore = db_helpers.isRegisteredBefore;
 const getAllMapsByUserName = db_helpers.getAllMapsByUserName;
 const getFavouritesByUserName = db_helpers.getFavouritesByUserName;
 const search = db_helpers.search;
