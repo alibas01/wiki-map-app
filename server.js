@@ -97,7 +97,16 @@ app.get("/index_map", (req, res) => {
   const user = req.session['user_id'];
   if (user) {
     getAllMapsByUserName(user).then(rows => {
-      const templateVars = { maps: rows, user };
+      let maps = [];
+      let unique = [];
+      for (const row of rows) {
+        console.log(unique, row['id']);
+        if (!unique.includes(row['id'])){
+          unique.push(row['id']);
+          maps.push(row);
+        }
+      }
+      const templateVars = { maps, user };
       res.status(200).json(templateVars);
     }).catch(err => res.status(500).send(err.stack));
   } else {

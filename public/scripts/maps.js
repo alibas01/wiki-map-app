@@ -11,7 +11,7 @@ $(() => {
                 <strong class="d-inline-block mb-2 text-success">Public</strong>
                 <p hidden id="current_map_${map['id']}">${map['id']}</p>
                 <h3 class="mb-0">
-                  <a class="text-dark" href="/detail/${map['id']}/1">${map['title']}</a>
+                  <a class="text-dark" href="/detail/${map['id']}/${map['location_id']}">${map['title']}</a>
                 </h3>
                 <button type="button" class="btn btn-outline-info favourite_${map['id']}">Add to Favorites</button>
                 <p class="card-text mb-auto">${map['city']}</p>
