@@ -213,7 +213,7 @@ app.post('/new', (req, res) => {
 
 //see specific details
 app.get('/detail/:map_id/:location_id', (req, res) => {
-  let map_id = req.params.map_id || 4;
+  let map_id = req.params.map_id;
   getAllLocationsByMapId(map_id).then(result => {
     const user = req.session['user_id'];
     const locations = result;
@@ -260,8 +260,15 @@ app.get('/favorites', (req, res) => {
 
 app.get('/favorites-ajax', (req, res) => {
   const user = req.session['user_id'];
-  getFavouritesByUserName(user).then(favourites => {
-    console.log(favourites);
+  getFavouritesByUserName(user).then(favs => {
+    let favourites = [];
+    let unique = [];
+    for (const fav of favs) {
+      if(!unique.includes(fav['map_id'])){
+        unique.push(fav['map_id']);
+        favourites.push(fav);
+      }
+    }
     const templateVars = {
       favourites,
       user
