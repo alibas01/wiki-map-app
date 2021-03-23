@@ -302,7 +302,7 @@ app.post('/delete-favourites', (req, res) => {
 });
 
 app.get('/profile', (req, res) => {
-  //get current user profile
+  // get current user profile
   const user = req.session['user_id']; // this should be on all get routes
   res.render('profile');
 });
