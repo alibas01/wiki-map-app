@@ -1,3 +1,5 @@
+@import "./partials/palette";
+
 .man-image {
   width: 150px;
   height: auto;
@@ -10,7 +12,7 @@ form{
 
 form button {
   border-radius: 6px;
-  background-color: crimson;
+  background-color: $color5;
   color: whitesmoke;
   box-shadow: rgba(0,0,0,.4) 6px 6px 6px;
   text-align: center;
